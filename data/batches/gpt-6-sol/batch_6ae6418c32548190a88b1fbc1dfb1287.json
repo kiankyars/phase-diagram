@@ -1,0 +1,13 @@
+{
+ "batch_id": "batch_6ae6418c32548190a88b1fbc1dfb1287",
+ "model": "gpt-6-sol",
+ "provider": "openai",
+ "wave": "reasoned-core",
+ "n": 768,
+ "estimate_usd": 0.3343,
+ "state": "done",
+ "created": "2026-10-31T19:29:16+00:00",
+ "closed": "2026-10-31T19:31:25+00:00",
+ "answered": 768,
+ "errors": []
+}

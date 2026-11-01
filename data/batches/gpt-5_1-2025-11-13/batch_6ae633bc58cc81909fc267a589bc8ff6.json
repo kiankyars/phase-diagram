@@ -1,0 +1,13 @@
+{
+ "batch_id": "batch_6ae633bc58cc81909fc267a589bc8ff6",
+ "model": "gpt-5.1-2025-11-13",
+ "provider": "openai",
+ "wave": "units",
+ "n": 1280,
+ "estimate_usd": 0.2259,
+ "state": "done",
+ "created": "2026-10-31T18:30:20+00:00",
+ "closed": "2026-10-31T19:03:35+00:00",
+ "answered": 1280,
+ "errors": []
+}

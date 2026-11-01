@@ -1,0 +1,13 @@
+{
+ "batch_id": "batch_6ae647d148cc81909066db4895f15902",
+ "model": "gpt-6-astra",
+ "provider": "openai",
+ "wave": "units-fine",
+ "n": 12993,
+ "estimate_usd": 24.0983,
+ "state": "done",
+ "created": "2026-10-31T19:56:01+00:00",
+ "closed": "2026-10-31T20:23:18+00:00",
+ "answered": 12993,
+ "errors": []
+}

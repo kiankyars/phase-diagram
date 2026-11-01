@@ -1,0 +1,13 @@
+{
+ "batch_id": "flex-20261031185155-0",
+ "model": "gpt-6.1-terra",
+ "provider": "openai",
+ "wave": "pilot",
+ "n": 7,
+ "estimate_usd": 0.0001,
+ "state": "done",
+ "created": "2026-10-31T18:51:55+00:00",
+ "closed": "2026-10-31T18:51:55+00:00",
+ "answered": 6,
+ "note": "A retry in the same second reused this id and overwrote the raw file of the first chunk. The six answers survive only in the parquet; their raw replies are gone."
+}

@@ -1,0 +1,14 @@
+{
+ "batch_id": "msgbatch_01Lhq1gUGnUDcZBuRe5BQJ78",
+ "model": "claude-haiku-5-5",
+ "provider": "anthropic",
+ "wave": "reasoned",
+ "n": 256,
+ "estimate_usd": 0.2448,
+ "state": "done",
+ "created": "2026-10-31T18:18:40+00:00",
+ "closed": "2026-10-31T18:21:10+00:00",
+ "answered": 256,
+ "errored": 0,
+ "expired": 0
+}

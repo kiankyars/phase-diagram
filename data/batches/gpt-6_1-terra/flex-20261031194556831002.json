@@ -1,0 +1,12 @@
+{
+ "batch_id": "flex-20261031194556831002",
+ "model": "gpt-6.1-terra",
+ "provider": "openai",
+ "wave": "reasoned-core",
+ "n": 325,
+ "estimate_usd": 0.0735,
+ "state": "done",
+ "created": "2026-10-31T19:45:56+00:00",
+ "closed": "2026-10-31T19:45:56+00:00",
+ "answered": 288
+}

@@ -1,0 +1,13 @@
+{
+ "batch_id": "batch_6ae630fe8de08190ba8daed761eab420",
+ "model": "gpt-6-luna",
+ "provider": "openai",
+ "wave": "reasoned",
+ "n": 256,
+ "estimate_usd": 0.2419,
+ "state": "cancelled",
+ "created": "2026-10-31T18:18:38+00:00",
+ "closed": "2026-10-31T18:51:20+00:00",
+ "answered": 0,
+ "errors": []
+}

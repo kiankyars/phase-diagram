@@ -1,0 +1,14 @@
+{
+ "batch_id": "msgbatch_016ny7gW9b6khUabkveEHMqZ",
+ "model": "claude-sonnet-5",
+ "provider": "anthropic",
+ "wave": "core",
+ "n": 4608,
+ "estimate_usd": 2.0182,
+ "state": "done",
+ "created": "2026-10-31T18:36:39+00:00",
+ "closed": "2026-10-31T18:42:09+00:00",
+ "answered": 4608,
+ "errored": 0,
+ "expired": 0
+}

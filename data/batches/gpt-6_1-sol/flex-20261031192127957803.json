@@ -1,0 +1,12 @@
+{
+ "batch_id": "flex-20261031192127957803",
+ "model": "gpt-6.1-sol",
+ "provider": "openai",
+ "wave": "core",
+ "n": 108,
+ "estimate_usd": 0.0413,
+ "state": "done",
+ "created": "2026-10-31T19:21:27+00:00",
+ "closed": "2026-10-31T19:21:27+00:00",
+ "answered": 108
+}

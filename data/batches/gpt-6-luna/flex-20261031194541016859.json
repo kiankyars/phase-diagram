@@ -1,0 +1,12 @@
+{
+ "batch_id": "flex-20261031194541016859",
+ "model": "gpt-6-luna",
+ "provider": "openai",
+ "wave": "reasoned-detail",
+ "n": 500,
+ "estimate_usd": 0.019,
+ "state": "done",
+ "created": "2026-10-31T19:45:41+00:00",
+ "closed": "2026-10-31T19:45:41+00:00",
+ "answered": 499
+}

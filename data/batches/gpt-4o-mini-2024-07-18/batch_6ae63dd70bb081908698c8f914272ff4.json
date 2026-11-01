@@ -1,0 +1,13 @@
+{
+ "batch_id": "batch_6ae63dd70bb081908698c8f914272ff4",
+ "model": "gpt-4o-mini-2024-07-18",
+ "provider": "openai",
+ "wave": "core",
+ "n": 4608,
+ "estimate_usd": 0.0475,
+ "state": "done",
+ "created": "2026-10-31T19:13:27+00:00",
+ "closed": "2026-10-31T19:22:15+00:00",
+ "answered": 4608,
+ "errors": []
+}

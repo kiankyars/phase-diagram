@@ -1,0 +1,14 @@
+{
+ "batch_id": "msgbatch_013H6gWD2wqwH1tyKRYGCyfw",
+ "model": "claude-fable-5",
+ "provider": "anthropic",
+ "wave": "core",
+ "n": 4608,
+ "estimate_usd": 18.3362,
+ "state": "done",
+ "created": "2026-10-31T18:36:38+00:00",
+ "closed": "2026-10-31T18:43:19+00:00",
+ "answered": 4608,
+ "errored": 0,
+ "expired": 0
+}

@@ -1,0 +1,12 @@
+{
+ "batch_id": "flex-20261031221345506220",
+ "model": "gpt-5.5-2026-04-23",
+ "provider": "openai",
+ "wave": "reasoned-fine",
+ "n": 500,
+ "estimate_usd": 1.7014,
+ "state": "done",
+ "created": "2026-10-31T22:13:45+00:00",
+ "closed": "2026-10-31T22:13:45+00:00",
+ "answered": 500
+}

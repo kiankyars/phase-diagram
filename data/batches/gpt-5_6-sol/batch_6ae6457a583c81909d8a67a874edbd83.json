@@ -1,0 +1,13 @@
+{
+ "batch_id": "batch_6ae6457a583c81909d8a67a874edbd83",
+ "model": "gpt-5.6-sol",
+ "provider": "openai",
+ "wave": "fine",
+ "n": 12288,
+ "estimate_usd": 4.3637,
+ "state": "done",
+ "created": "2026-10-31T19:46:02+00:00",
+ "closed": "2026-10-31T19:59:12+00:00",
+ "answered": 12288,
+ "errors": []
+}

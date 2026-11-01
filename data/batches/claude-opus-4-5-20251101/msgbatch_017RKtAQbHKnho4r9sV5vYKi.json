@@ -1,0 +1,14 @@
+{
+ "batch_id": "msgbatch_017RKtAQbHKnho4r9sV5vYKi",
+ "model": "claude-opus-4-5-20251101",
+ "provider": "anthropic",
+ "wave": "reasoned-detail",
+ "n": 3072,
+ "estimate_usd": 20.0651,
+ "state": "done",
+ "created": "2026-10-31T19:06:30+00:00",
+ "closed": "2026-10-31T19:16:21+00:00",
+ "answered": 3072,
+ "errored": 0,
+ "expired": 0
+}

@@ -1,0 +1,13 @@
+{
+ "batch_id": "batch_6ae64253ecf4819085c27b086a621a97",
+ "model": "o3-2025-04-16",
+ "provider": "openai",
+ "wave": "fine",
+ "n": 12288,
+ "estimate_usd": 25.2641,
+ "state": "done",
+ "created": "2026-10-31T19:32:36+00:00",
+ "closed": "2026-10-31T19:54:42+00:00",
+ "answered": 12288,
+ "errors": []
+}

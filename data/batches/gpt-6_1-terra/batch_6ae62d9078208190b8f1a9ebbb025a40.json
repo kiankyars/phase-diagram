@@ -1,0 +1,13 @@
+{
+ "batch_id": "batch_6ae62d9078208190b8f1a9ebbb025a40",
+ "model": "gpt-6.1-terra",
+ "provider": "openai",
+ "wave": "pilot",
+ "n": 256,
+ "estimate_usd": 0.0352,
+ "state": "cancelled",
+ "created": "2026-10-31T18:04:00+00:00",
+ "closed": "2026-10-31T18:51:20+00:00",
+ "answered": 249,
+ "errors": []
+}
