@@ -240,8 +240,8 @@ ol.sources { margin: 0; padding-left: 20px; font-size: 0.95rem; display: grid; g
   <div class="intro">
     <div class="eyebrow">28 language models · IAPWS reference equations · <span id="totalAnswers"></span> answers</div>
     <h1>What does a language model think water does?</h1>
-    <p class="lede">We asked 28 language models about pure water at thousands of temperatures and pressures, taking a one-word answer each time, drew the phase diagram each one implies, and graded it against the IAPWS reference equations. Answering instantly, the models draw maps that look like phase diagrams, but on balanced accuracy none beats a sketch made from four remembered facts. Allowed to reason, half of the 18 models tested both ways beat that sketch, and the best are almost exact.</p>
-    <p class="answer">Across generations the answer depends on the curve. Answering instantly, over its whole series OpenAI's boiling curve moved toward the truth in all six notations, and in kelvin and megapascals the top of its melting line, above 209 MPa, swung past the truth, from too cold to too hot. Neither move is resolved over the span both providers cover. Anthropic's one-year instant series resolves no fall in error on either curve in any notation, though in kelvin and megapascals its boiling line did rise from far too low to the truth, and the two providers' falls in boiling error cannot be told apart. Instant maps change with the notation, so they are not one stable picture of water. With reasoning allowed most are, and release date adds no resolved gain in accuracy. Resolved means the 95% bootstrap interval on the yearly change excludes zero.</p>
+    <p class="lede">We asked 28 language models about pure water at thousands of temperatures and pressures, drew the phase diagram each one implies, and graded it against IAPWS. Answering instantly, none beats a sketch made from four remembered facts. Allowed to reason, half of the 18 models tested both ways beat it, and the best are almost exact.</p>
+    <p class="answer">Across generations the answer depends on the curve. Instantly, OpenAI's boiling curve moved toward the truth and the top of its melting line swung past it, but neither move is resolved over the span both providers cover, and Anthropic resolves no fall in error. Instant maps also change with the notation. With reasoning allowed most do not, and release date adds no resolved gain in accuracy. Resolved means the 95% bootstrap interval on the yearly change excludes zero.</p>
     <div class="stats" id="stats"></div>
     <p><a href="https://github.com/kiankyars/phase-diagram">Code, stored answers and raw replies on GitHub</a></p>
   </div>
@@ -312,7 +312,7 @@ ol.sources { margin: 0; padding-left: 20px; font-size: 0.95rem; display: grid; g
   <section class="section" aria-labelledby="findings-title">
     <header>
       <h2 id="findings-title">What the maps show</h2>
-      <p>Scores here are in kelvin and megapascals at 64 × 64 unless a sentence says otherwise. The section on units below shows how much that choice matters.</p>
+      <p>Scores are in kelvin and megapascals at 64 × 64 unless a sentence says otherwise.</p>
     </header>
     <div class="notes">
       <div class="finding">
@@ -458,7 +458,7 @@ ol.sources { margin: 0; padding-left: 20px; font-size: 0.95rem; display: grid; g
       </div>
       <div>
         <h3>No tools</h3>
-        <p>The request code accepts a fixed list of keys, none of which can carry a tool, and raises on anything else. A schema enforced by each provider limits a reply to the four phase words. Of about 1.2 million replies, 23 escaped it. Two were a bare phase word and count as that word. The other 21, 5 refusals and 16 cut off at the token limit, count as wrong. Fallbacks are off, so another model's answers cannot land on this one's map.</p>
+        <p>The request code accepts a fixed list of keys, none of which can carry a tool, and raises on anything else. A schema enforced by each provider limits a reply to the four phase words. Of about 1.2 million replies, 23 escaped it: two bare phase words count as that word, and the other 21 count as wrong. Fallbacks are off.</p>
       </div>
       <div>
         <h3>Two conditions</h3>
@@ -476,7 +476,7 @@ ol.sources { margin: 0; padding-left: 20px; font-size: 0.95rem; display: grid; g
       </div>
       <div>
         <h3>Limits</h3>
-        <p>Retirements cut Anthropic's history off at September 2025 and OpenAI's at July 2024, so the two lines cover different spans. GPT-5 itself needs organization verification and is missing. The OpenAI panel is the flagship line plus the current lineup: seven working variants, mostly small models, were left out by choice, and o1, o3-mini, o4-mini and GPT-4.1 nano are retired, so trends describe this panel rather than every release. Release date stands in for generation. Reasoning settings differ by model, so the condition is comparable only as "allowed", and the reasoning models use falls with release date at both providers, so a reasoned trend does not isolate generation. Default sampling applies throughout, and each prompt is asked once or twice. Intervals are not adjusted for how many were examined: 26 of 143 distinct trends and 13 of 84 notation contrasts exclude zero, and 24 of the 26 trends are on OpenAI's instant series. They resample models, and consecutive releases are related, so an interval just clear of zero is weak evidence by itself. Ice VII above the critical temperature is barely sampled. Six GPT-6.1 Terra answers survive without their raw replies, after an id collision that is now fixed. The published raw replies have Anthropic's thinking signatures blanked, because they can identify the account. The harness, the analysis and this page were written with Claude Code running Claude Opus 5.5, which is one of the graded models.</p>
+        <p>Retirements cut Anthropic's history off at September 2025 and OpenAI's at July 2024, so the two lines cover different spans. Release date stands in for generation. Reasoning settings differ by model, and newer models reason less at both providers, so a reasoned trend does not isolate generation. Default sampling applies throughout, and each prompt is asked once or twice. Intervals are not adjusted for how many were examined: 26 of 143 trends and 13 of 84 notation contrasts exclude zero. They resample models, and consecutive releases are related. Ice VII above the critical temperature is barely sampled. Six GPT-6.1 Terra answers survive without their raw replies, after an id collision that is now fixed. The harness, the analysis and this page were written with Claude Code running Claude Opus 5.5, which is one of the graded models.</p>
       </div>
       <div>
         <h3>Sources</h3>
@@ -489,7 +489,7 @@ ol.sources { margin: 0; padding-left: 20px; font-size: 0.95rem; display: grid; g
   </section>
 
   <footer class="colophon">
-    <p>Answers collected on 31 October 2026. Code, stored answers and raw replies are at <a href="https://github.com/kiankyars/phase-diagram">github.com/kiankyars/phase-diagram</a>.</p>
+    <p>Answers collected on 31 October 2026.</p>
   </footer>
 </div>
 <div class="tip" id="tip" hidden></div>

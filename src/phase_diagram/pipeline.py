@@ -275,15 +275,6 @@ def submit_anthropic(client, model: Model, ids: list[str], by_pid: pd.DataFrame)
     return client.messages.batches.create(requests=requests).id
 
 
-def blank_signatures(data: dict) -> dict:
-    """Blank thinking signatures, opaque blobs that can identify the account."""
-    if data["result"]["type"] == "succeeded":
-        for block in data["result"]["message"]["content"]:
-            if "signature" in block:
-                block["signature"] = None
-    return data
-
-
 def collect_anthropic(client, model: Model, path: Path) -> bool:
     manifest = json.loads(path.read_text())
     batch_id = manifest["batch_id"]
@@ -292,7 +283,7 @@ def collect_anthropic(client, model: Model, path: Path) -> bool:
         return False
     raw_lines, rows = [], []
     for entry in client.messages.batches.results(batch_id):
-        data = blank_signatures(entry.model_dump(mode="json"))
+        data = entry.model_dump(mode="json")
         raw_lines.append(json.dumps(data, separators=(",", ":")))
         if data["result"]["type"] == "succeeded":
             audit = sealed.audit_messages(data["result"]["message"])
