@@ -16,6 +16,7 @@ requires-python = ">=3.13"
 dependencies = [
     "anthropic>=2.3.0",
     "iapws>=1.5.5",
+    "markdown-it-py>=4.2.0",
     "matplotlib>=3.11.2",
     "numpy>=2.5.4",
     "openai>=3.42.0",

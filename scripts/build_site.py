@@ -7,9 +7,11 @@ draw any model, condition and unit system without loading anything else.
 from __future__ import annotations
 
 import json
+import re
 
 import numpy as np
 import pandas as pd
+from markdown_it import MarkdownIt
 
 from phase_diagram import grade, grid, truth
 from phase_diagram.framings import CANONICAL, FRAMINGS
@@ -17,6 +19,8 @@ from phase_diagram.pipeline import ROOT, load_answers, load_grid, spent
 from phase_diagram.registry import MODELS
 
 TEMPLATE = ROOT / "site" / "template.html"
+PAGE = ROOT / "site" / "page.md"
+WIDGETS = ROOT / "site" / "widgets.html"
 OUT = ROOT / "results" / "site" / "index.html"
 RESULTS = ROOT / "results"
 
@@ -93,8 +97,37 @@ def spend_note(all_answers: dict[str, pd.DataFrame]) -> str:
         paid[model.provider] += spent(model, all_answers[model.id])
     return (
         f"The run cost ${sum(paid.values()):,.0f}: ${paid['anthropic']:,.0f} at Anthropic and ${paid['openai']:,.0f} at OpenAI, "
-        "all at Batch or Flex prices, half the standard rate, computed from the tokens each API reported."
+        "all at Batch or Flex prices, half the standard rate."
     )
+
+
+def render_section(text: str) -> str:
+    """One `##` section: text up to the first chart or `###` goes in the header."""
+    title, body = text.split("\n", 1)
+    md = MarkdownIt()
+    match = re.search(r"^(###|\{\{)", body, re.M)
+    cut = match.start() if match else len(body)
+    head, rest = body[:cut], body[cut:]
+    if rest.startswith("###"):
+        notes = "".join(f"<div>{md.render('### ' + note)}</div>" for note in rest.split("### ")[1:])
+        rest = f'<div class="notes">{notes}</div>'
+    else:
+        rest = md.render(rest)
+    slug = re.sub(r"[^a-z0-9]+", "-", title.lower()).strip("-")
+    return f'<section class="section" aria-labelledby="{slug}"><header><h2 id="{slug}">{title}</h2>{md.render(head)}</header>{rest}</section>'
+
+
+def render_page(spend: str) -> str:
+    """Turn site/page.md into HTML, with each {{name}} line replaced by its chart from site/widgets.html."""
+    parts = re.split(r"<!-- widget: ([a-z-]+) -->\n", WIDGETS.read_text())
+    widgets = dict(zip(parts[1::2], parts[2::2]))
+    intro, *sections = re.split(r"^## ", PAGE.read_text(), flags=re.M)
+    intro = MarkdownIt().render(intro).replace("<p>We asked", '<p class="lede">We asked', 1).replace("<p>Do newer", '<p class="answer">Do newer', 1)
+    html = f'<div class="intro">{intro}</div>' + "".join(map(render_section, sections))
+    used = re.findall(r"<p>\{\{([a-z-]+)\}\}</p>", html)
+    assert sorted(used) == sorted([*widgets, "spend"]), "site/page.md must use every chart exactly once"
+    html = re.sub(r"<p>\{\{([a-z-]+)\}\}</p>", lambda m: f"<p>{spend}</p>" if m[1] == "spend" else widgets[m[1]], html)
+    return html.replace("<ol>", '<ol class="sources">')
 
 
 def curves() -> list[list[list[float]]]:
@@ -206,7 +239,7 @@ def main() -> None:
             for name, group in references.groupby("reference")
         },
     }
-    html = TEMPLATE.read_text().replace("/*DATA*/null", json.dumps(data, separators=(",", ":"))).replace("<!--SPEND-->", spend_note(all_answers))
+    html = TEMPLATE.read_text().replace("<!--PAGE-->", render_page(spend_note(all_answers))).replace("/*DATA*/null", json.dumps(data, separators=(",", ":")))
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(html)
     print(f"{OUT.relative_to(ROOT)}: {OUT.stat().st_size / 1e6:.2f} MB, {len(maps)} maps")

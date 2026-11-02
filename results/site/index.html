@@ -237,256 +237,202 @@ ol.sources { margin: 0; padding-left: 20px; font-size: 0.95rem; display: grid; g
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><g id="trueCurves"></g></defs></svg>
 
 <div class="page">
-  <div class="intro">
-    <div class="eyebrow">28 language models · IAPWS reference equations · <span id="totalAnswers"></span> answers</div>
-    <h1>What does a language model think water does?</h1>
-    <p class="lede">We asked 28 language models about pure water at thousands of temperatures and pressures, drew the phase diagram each one implies, and graded it against IAPWS. Answering instantly, none beats a sketch made from four remembered facts. Allowed to reason, half of the 18 models tested both ways beat it, and the best are almost exact.</p>
-    <p class="answer">Across generations the answer depends on the curve. Instantly, OpenAI's boiling curve moved toward the truth and the top of its melting line swung past it, but neither move is resolved over the span both providers cover, and Anthropic resolves no fall in error. Instant maps also change with the notation. With reasoning allowed most do not, and release date adds no resolved gain in accuracy. Resolved means the 95% bootstrap interval on the yearly change excludes zero.</p>
-    <div class="stats" id="stats"></div>
-    <p><a href="https://github.com/kiankyars/phase-diagram">Code, stored answers and raw replies on GitHub</a></p>
+<div class="intro"><div class="eyebrow">28 language models · IAPWS reference equations · <span id="totalAnswers"></span> answers</div>
+
+<h1>What does a language model think water does?</h1>
+<p class="lede">We asked 28 language models about pure water at thousands of temperatures and pressures. From their answers we drew the phase diagram each model implies, and we graded it against the IAPWS reference equations. Answering instantly, no model beats a simple sketch made from four remembered facts. Allowed to reason, half of the 18 models tested both ways beat the sketch, and the best are almost exact.</p>
+<p class="answer">Do newer models do better? It depends on the curve. When OpenAI's models answer instantly, their boiling curve has moved toward the truth and the top of their melting curve has moved past it. Neither trend is clear since September 2025, the period both providers cover. Anthropic's instant answers show no clear fall in error. Instant maps also change with the units in the question. With reasoning allowed, most maps do not, and newer models are not clearly more accurate. We call a trend clear when its 95% interval does not include zero.</p>
+<div class="stats" id="stats"></div>
+
+<p><a href="https://github.com/kiankyars/phase-diagram">Code, stored answers and raw replies on GitHub</a></p>
+</div><section class="section" aria-labelledby="the-atlas"><header><h2 id="the-atlas">The atlas</h2><p>Each square is one model's phase diagram, built only from its answers. Temperature runs left to right and pressure runs bottom to top. Black lines show the true IAPWS boundaries and the critical temperature and pressure.</p>
+<p>Scores are balanced accuracy, the average share correct across the four phases. A score of 0.25 is random guessing and 1 is perfect. Scores here use kelvin and megapascals and the same 64 × 64 points for every model, even where a map is drawn finer.</p>
+<p>Models marked * cannot turn reasoning off, so they appear only under &quot;Reasoning allowed&quot;. Opus 4.7, GPT-4o, GPT-4o mini and GPT-4.1 did not reason, so they appear only under &quot;Answering instantly&quot;.</p>
+</header><fieldset class="control">
+  <legend>Condition</legend>
+  <div class="segments" id="atlasCondition"></div>
+</fieldset>
+<div class="legend flush" id="atlasLegend"></div>
+<div class="atlas" id="atlas"></div>
+
+</section><section class="section" aria-labelledby="explore-one-model-s-diagram"><header><h2 id="explore-one-model-s-diagram">Explore one model's diagram</h2><p>Every cell is one question, asked on its own with no tools. Hover over a cell to see the exact prompt, the model's answer and the true phase.</p>
+</header><div class="explorer">
+  <div class="plate">
+    <div class="chart-frame">
+      <div class="y-axis" id="yAxis" aria-hidden="true"></div>
+      <div class="map" id="bigMap" tabindex="0" role="application" aria-label="Phase diagram. Use the arrow keys to move between cells.">
+        <canvas id="bigCanvas"></canvas>
+        <svg viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">
+          <use href="#trueCurves" id="bigCurves"></use>
+          <rect class="cursor-shadow" id="cursorShadow" hidden></rect>
+          <rect class="cursor" id="cursor" hidden></rect>
+        </svg>
+      </div>
+      <div class="x-axis" id="xAxis" aria-hidden="true"></div>
+    </div>
+    <div class="legend" id="legend"></div>
   </div>
-
-  <section class="section" aria-labelledby="atlas-title">
-    <header>
-      <h2 id="atlas-title">The atlas</h2>
-      <p id="atlasNote">Each square is one model's phase diagram, built only from its answers. Black lines are the IAPWS boundaries and the critical temperature and pressure. Temperature runs left to right and pressure bottom to top. Scores are balanced accuracy in kelvin and megapascals, on the same 64 × 64 points for every model, even where a map is drawn finer: 0.25 is guessing and 1 is perfect. Models marked * cannot turn reasoning off, so they appear only under reasoning allowed. Opus 4.7, GPT-4o, GPT-4o mini and GPT-4.1 did not reason, so they appear only under answering instantly.</p>
-    </header>
+  <div class="panel">
+    <div class="control">
+      <label for="modelSelect">Model</label>
+      <select id="modelSelect"></select>
+    </div>
     <fieldset class="control">
       <legend>Condition</legend>
-      <div class="segments" id="atlasCondition"></div>
+      <div class="segments" id="conditionControl"></div>
     </fieldset>
-    <div class="legend flush" id="atlasLegend"></div>
-    <div class="atlas" id="atlas"></div>
-  </section>
-
-  <section class="section" aria-labelledby="explore-title">
-    <header>
-      <h2 id="explore-title">Explore one model's diagram</h2>
-      <p>Every cell is one question, asked in isolation with no tools. Hover a cell to read the exact prompt, the model's answer and the true phase. The black lines are the IAPWS boundaries and the critical temperature and pressure.</p>
-    </header>
-    <div class="explorer">
-      <div class="plate">
-        <div class="chart-frame">
-          <div class="y-axis" id="yAxis" aria-hidden="true"></div>
-          <div class="map" id="bigMap" tabindex="0" role="application" aria-label="Phase diagram. Use the arrow keys to move between cells.">
-            <canvas id="bigCanvas"></canvas>
-            <svg viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">
-              <use href="#trueCurves" id="bigCurves"></use>
-              <rect class="cursor-shadow" id="cursorShadow" hidden></rect>
-              <rect class="cursor" id="cursor" hidden></rect>
-            </svg>
-          </div>
-          <div class="x-axis" id="xAxis" aria-hidden="true"></div>
-        </div>
-        <div class="legend" id="legend"></div>
-      </div>
-      <div class="panel">
-        <div class="control">
-          <label for="modelSelect">Model</label>
-          <select id="modelSelect"></select>
-        </div>
-        <fieldset class="control">
-          <legend>Condition</legend>
-          <div class="segments" id="conditionControl"></div>
-        </fieldset>
-        <fieldset class="control">
-          <legend>Units in the prompt</legend>
-          <div class="segments" id="framingControl"></div>
-        </fieldset>
-        <fieldset class="control">
-          <legend>Show</legend>
-          <div class="segments" id="viewControl"></div>
-        </fieldset>
-        <div class="readout">
-          <div class="prompt" id="prompt"></div>
-          <div class="verdict">
-            <div><small>Model said</small><b id="said">–</b></div>
-            <div><small>IAPWS</small><b id="actual">–</b></div>
-          </div>
-          <table class="readings" id="readings"></table>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" aria-labelledby="findings-title">
-    <header>
-      <h2 id="findings-title">What the maps show</h2>
-      <p>Scores are in kelvin and megapascals at 64 × 64 unless a sentence says otherwise.</p>
-    </header>
-    <div class="notes">
-      <div class="finding">
-        <h3>Tidy is not the same as right</h3>
-        <p>Instant maps are tidy: 84–98% of points sit in the largest connected region of their phase, against 100% for the truth. Their balanced accuracy still runs only from 0.63 to 0.83. Physical order means more pressure moves water to a denser phase and more heat to a lighter one, ranking solid, liquid, supercritical, vapor. Ice Ih breaks this rule and jitter adds false steps, so even the truth falls short of 100%. Where neighboring answers differ, the order is physical 54–69% of the time, against 94% for the truth on the same jittered points (99% at 128 × 128) and about 50% for a random map. Inside a region a stray answer adds two physical and two unphysical steps, which pulls the figure toward 50%: half the unphysical steps on the median map touch a cell none of its four neighbors matches. Six of the eight regions are mostly right, at 9–27% wrong on average. The misses gather in the liquid above the critical pressure (68%) and the vapor below 0 °C (56%), and on five maps most of the ordinary liquid, below the critical pressure, is missing.</p>
-      </div>
-      <div class="finding">
-        <h3>Four facts beat every instant map on balanced accuracy</h3>
-        <p>A sketch built from the triple point, the critical point, ice melting at 0 °C and one latent heat scores 0.94. No model answering instantly passes 0.83, and the best of the 132 maps across all six notations at 32 × 32 is Opus 4.7 in kelvin and pascals, at 0.90. The sketch is not better everywhere. It has no ice above 0 °C, so 21 of the 22 maps beat it on high-pressure ice, GPT-4o and GPT-6 Luna beat its melting-curve error, and it uses the textbook definition of supercritical, above both critical values, which the prompt does not state. Its layout is built in rather than derived from those facts, and it was chosen after the pilot. Of the 18 models tested both ways, 11 of the 17 with a reading boil water within 15 K of the truth at 1 atm instantly, and all 18 do with reasoning allowed.</p>
-      </div>
-      <div class="finding">
-        <h3>The boiling curve closed in at OpenAI, the top of the melting curve overshot</h3>
-        <p>At OpenAI, instant boiling-curve error fell from about 2 decades of pressure on GPT-4o mini, whose line there mostly marks where vapor turns to supercritical, to about 0.2 on GPT-5.5 and GPT-6 Sol. That fall is resolved in all six notations over the whole series, but not over the span both providers cover (a fall of 0.47 decades a year, −0.27 to 0.87). At Anthropic no notation resolves a trend in the error: Sonnet 4.5's 2 decades appears only in kelvin and megapascals, 0.6 to 1.2 elsewhere, Sonnet 4.6 under five months later reads 1.6 to 4.7, and while Sonnet 5.5 reaches 0.2, Haiku 5.5 is at 1.2. Its boiling line did rise, though, 1.55 decades a year (0.43 to 2.94), from far too low on Sonnet 4.5 to the truth on Sonnet 5.5. The two providers' falls in error cannot be told apart (0.49 and 0.75 decades a year; difference 0.26, −0.9 to 1.5). Melting-curve error did not fall: it runs from 27 to 107 K, and the worst values are on recent models, which put high-pressure ice far too hot. Thirteen of the 22, 12 of them from 2026, turn hot compressed liquid into ice below 1 GPa, where the true melting pressure is 3 to 12 GPa. With reasoning allowed, 10 of the 12 of these that have a reasoned arm put that line above 1 GPa.</p>
-      </div>
-      <div class="finding">
-        <h3>Allowing reasoning lifted all 18 models tested both ways</h3>
-        <p>Balanced accuracy rose on all 18, by a median of 0.20 and at least 0.06. Over the year both providers cover, neither instant trend is resolved in kelvin and megapascals: OpenAI −0.03 to 0.25 a year, Anthropic −0.21 to 0.11. With reasoning allowed, the melting curve improves on all 18, from a median of 77 K to 20 K. GPT-5.6 Sol, and GPT-6 Astra and GPT-6.1 Sol, which cannot turn reasoning off, match IAPWS at all but one or two of 39 pressures, on a grid with cells 11 K wide, including 8 or 9 of the 10 above 209 MPa, where the curve climbs. Reasoning also cuts the median boiling error from 0.58 to 0.006 decades and leaves 23 of 24 maps at or below the best instant map, 0.18.</p>
-      </div>
-      <div class="finding">
-        <h3>Instant answers depend on the notation</h3>
-        <p>At 32 × 32, all 22 instant models change their answers with the units more than they do on a plain repeat. Sonnet 4.6 agrees with itself on 96% of repeats and 76% of unit changes. Opus 5 calls hot gas below the critical pressure supercritical 85–89% of the time in kelvin and 18–22% in Celsius. With reasoning allowed, at 16 × 16, the gap between repeats and unit changes is 0.06 at most, and for 18 of 24 models it cannot be told from zero.</p>
-      </div>
-      <div class="finding">
-        <h3>Reasoning concentrates near the lines between labels</h3>
-        <p>Eight of the nine models that often skip reasoning reason more often near the boundaries and critical lines, and all nine spend more tokens there: Opus 5.5 reasons on 79% of nearby points and 20% of the rest, Sonnet 5.5 on 76% and 17%. Sonnet 5 reasons on fewer points near a line, 80% against 88% far from one, but spends more tokens there, 151 a reply against 93. Drawn on the map, the reasoning of Opus 5.5 and Sonnet 5.5 traces the sublimation and boiling curves and the critical pressure, then fills the map from about 200 MPa on Opus 5.5, apart from its coldest ice, and from about 1 GPa on Sonnet 5.5, even in the hot corner where no boundary lies. Where it can be tested, this tracks the model's own instant errors on three of four models: Sonnet 5.5 reasons on 82% of the points it gets wrong instantly and 28% of those it gets right, Opus 4.8 on 79% and 49%, Opus 5 on 75% and 65%. Much of that is location: those gaps of 53, 31 and 11 points shrink to 5, 9 and 7 within 16 × 16 cells. Sonnet 5 shows no such link overall, at 85% and 85%, though within cells it reasons 4 points more on its errors, and Opus 5.5 has no instant arm to test.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" aria-labelledby="reasoning-title">
-    <header>
-      <h2 id="reasoning-title">What allowing reasoning changes</h2>
-      <p id="reasoningNote">Each row is one model. A hollow circle is the model answering with no reasoning, a filled circle is the same model with reasoning allowed, and the vertical line is the four-fact sketch. Haiku 5.5 gains the most as scored here, from 0.63 to 0.96: instantly it almost never says liquid. Accept supercritical on fluid and GPT-5.5 gains the most, 0.31 against Haiku 5.5's 0.19. Sonnet 5 gains the least, from 0.79 to 0.85: with reasoning allowed it calls 59% of hot gas supercritical, up from 24% instantly, the only one of the 18 whose vapor score falls. Accept that word on hot gas under both conditions and it goes from 0.82 to 0.91, still the second-smallest gain.</p>
-      <p>Fourteen of 24 models beat the sketch with reasoning allowed, nine of them among the 18 tested both ways: seven of eight at OpenAI and two of ten at Anthropic, though no setting is shared between the two providers, so this split does not compare them like for like. The near misses of GPT-5.1 and Sonnet 4.5 are within sampling error, and so is GPT-6 Luna's lead on these 4,096 points, though on its 128 × 128 map Luna leads the sketch by 0.012 (0.006 to 0.018).</p>
-      <p>Allowed does not mean used. Settings differ by model and some rarely reason: Fable 5.1 does so on 11% of replies. GPT-6 Astra averages 26 reasoning tokens a reply and scores 0.99. The table at the bottom gives every model's share.</p>
-    </header>
-    <div class="chart" id="reasoningChart"></div>
-    <div class="chart-key" id="reasoningKey"></div>
-  </section>
-
-  <section class="section" aria-labelledby="fan-title">
-    <header>
-      <h2 id="fan-title">Do the boundaries move toward the truth?</h2>
-      <p id="fanNote">Partly. Answering instantly, a resolved fall in error appears only on OpenAI's boiling curve, over its whole series. With reasoning allowed, only Anthropic's melting curve shows one, and only just. Each line marks where one model stops saying vapor (boiling) or solid (melting) at 64 × 64, whatever it says next, so a model with little liquid still gets a line. Lines are a running median over five grid lines, drawn only where the answer changes, and colored by release date as in the key. The heavy lines are IAPWS.</p>
-      <p>Instantly, boiling curves spread over orders of magnitude of pressure and newer models gather around the truth. The melting lines gather in the wrong place: 13 of the 14 lines from 2026 sit at 0.7 GPa or below at 400 K, where the truth is 2.8 GPa, and 10 stay at 2 GPa or below at 600 K, where it is 9 GPa, further below it than older ones. The 14th, Haiku 5.5, goes the other way and stops at 342 K. The melting error comes from the top of the map. Over the 29 isobars below 209 MPa it runs from 8 to 43 K, with no resolved trend in its size. Over the 10 above it runs from 58 K to at least 382 K: most recent models put ice far too hot, and GPT-4o mini, GPT-4o, GPT-4.1 and both Haikus too cold. On four of those isobars Opus 5 says ice all the way to 900 K, so its offset stops at the map edge. Across notations at 32 × 32 all but GPT-4o stay too cold in all six, while GPT-4o turns too hot in atmospheres.</p>
-      <p>The count of models that turn hot compressed liquid into ice below 1 GPa moves with the notation: 13 of 22 in kelvin and megapascals at 64 × 64, and from 9 to 14 across notations at 32 × 32, where only GPT-6 Sol, Opus 4.8, Opus 5 and Sonnet 5 stay below in all six.</p>
-      <p>With reasoning allowed, the boiling curves land on the truth and most melting lines follow it up. Of the 12 of those 13 models with a reasoned arm, six reach about 6 GPa, read as the one pressure that best separates solid from the rest between 400 and 640 K, which is what the true labels give on these points. Across all 24 reasoned maps the ten melting lines closest to the truth are from 2026, as are 18 of the 24, though some 2026 models, such as Sonnet 5, still sit far below.</p>
-    </header>
-    <div class="two" id="fanCharts"></div>
-    <div class="chart-key" id="fanKey"></div>
-  </section>
-
-  <section class="section" aria-labelledby="time-title">
-    <header>
-      <h2 id="time-title">Across generations</h2>
-      <p id="timeNote">Balanced accuracy by release date in kelvin and megapascals, with lines joining models of the same family. Yearly changes below are Theil-Sen slopes with 95% bootstrap intervals, and resolved means the interval excludes zero. Over the span both providers cover, September 2025 on, neither instant trend is resolved: OpenAI gains 0.05 a year (−0.03 to 0.25) and Anthropic 0.00 (−0.21 to 0.11). OpenAI's full-series gain is the same 0.05 a year with a narrower interval (0.01 to 0.10). In this notation and grid it clears zero only with GPT-4o mini, GPT-4o and GPT-4.1, which have no reasoning to turn off, in the series: leave out any one of those, or of the three newest instant models, and zero is back in. Across notations at 32 × 32 the slope runs from 0.04 to 0.11 and the verdict moves too: in all three Celsius notations no single omission brings zero back and the trend clears zero even over the shared span (0.03 to 0.19, 0.03 to 0.17, 0.04 to 0.28), while in kelvin and pascals zero is inside even over the whole series (−0.02 to 0.08). With reasoning allowed neither provider shows a resolved gain in accuracy: OpenAI 0.01 a year (−0.02 to 0.06), Anthropic 0.02 (−0.05 to 0.11).</p>
-      <p>Instant boiling-curve error falls 0.49 decades a year at OpenAI (0.13 to 0.85), or 0.47 over the shared span (−0.27 to 0.87), and 0.75 at Anthropic (−0.13 to 1.99). Those two falls cannot be told apart (difference 0.26, −0.9 to 1.5). Signed, Anthropic's line rose 1.55 decades a year (0.43 to 2.94), from far too low on Sonnet 4.5 to the truth on Sonnet 5.5, while OpenAI's shows no such move (−0.62 to 0.89). Instant melting-curve error rises at both in kelvin and megapascals, but both intervals include zero, and Anthropic's slope turns negative in all three Celsius notations. OpenAI's melting line moved 42 K a year hotter on average over its 39 isobars (15 to 74), from 13–45 K too cold on its three oldest models to 18–83 K too hot from GPT-5.4 on, past the truth rather than onto it. All of that is above 209 MPa, where those models went from 46–193 K too cold to 65–351 K too hot. Below 209 MPa the line moved 14 K a year colder, only just clear of zero (0.7 to 27), and five of the six from GPT-5.4 on sit 9–37 K too cold. Over the shared span the swing is not resolved (−47 to 93). Steps between neighboring answers grew more physical at OpenAI, 0.03 a year (0.01 to 0.06), with no trend at Anthropic (−0.10 to 0.06).</p>
-      <p>With reasoning allowed, melting-curve error falls about 27 K a year at Anthropic (0.5 to 60), only just clear of zero: leave out the Fable, Haiku or Opus models, or any one of eight of the 13 models, and the interval includes zero. It falls 7.5 K at OpenAI (−6 to 22), which is not resolved.</p>
-      <p>Answering instantly, small models lag on the boiling curve, ranking 15th to 21st of 22, and all but GPT-6 Luna on balanced accuracy too. Luna's error is 0.82 decades, against about 0.2 on GPT-6 Sol and Sonnet 5.5, yet it has the best instant balanced accuracy of any model, 0.83, and the second-lowest melting-curve error, 27 K. Haiku 5.5 has the worst balanced accuracy as scored here, 0.63, and its 1.19 decades is not a true boiling curve, because it says no liquid on 25 of the 33 lines.</p>
-    </header>
-    <div class="two" id="timeCharts"></div>
-    <div class="chart-key" id="timeKey"></div>
-  </section>
-
-  <section class="section" aria-labelledby="missed-title">
-    <header>
-      <h2 id="missed-title">Where the picture breaks</h2>
-      <p id="missedNote">Darker cells are points where more models answered wrong, at 64 × 64. Instantly, errors pile up at the liquid above the critical pressure, which models call supercritical or ice, at the vapor below 0 °C, along the top of the boiling curve, and at the hot gas just below the critical pressure, where 92% of the wrong answers are the word supercritical. With reasoning allowed, most of this clears: on the 18 models tested both ways, the share wrong on the liquid above the critical pressure, the vapor below 0 °C and the vapor within a decade below the critical pressure falls from 61% to 14%. What remains runs along the top of the melting curve and past the point near 705 K where it leaves the map, into the hot high-pressure corner, sits in the cold low-pressure corner, and lies as a pale wash over hot vapor, where Sonnet 5, Opus 5, Sonnet 4.6 and Haiku 4.5 say supercritical. Across all 24 models that wash holds 36% of the wrong answers left, and across the 18 tested both ways it holds 40%.</p>
-    </header>
-    <div class="missed" id="missedMaps"></div>
-    <div class="chart-key" id="missedKey"></div>
-    <p id="regionNote">The same errors by region: the share of each region's points a model got wrong, darker for more. "Vapor below 0 °C" is the vapor side of the sublimation curve. Instantly, in kelvin and megapascals, Sonnet 4.5, GPT-4o mini, GPT-4.1, Haiku 4.5 and Opus 4.7 miss 92–100% of those points, drawing a wall of ice down to near vacuum: near 0 °C on Sonnet 4.5 and Opus 4.7, about 15 °C warmer on the others. In the same notation, from GPT-5.2 on, most OpenAI models swing the other way: they get those points right by putting the sublimation curve 0.8 to 3.6 decades too high, and lose ordinary ice instead, missing 22–54% of it. On GPT-5.2, 5.4 and 5.5 most of that ice is called vapor. On GPT-5.6 Sol, GPT-6 Sol and GPT-6.1 Terra a third to a half is called liquid, which the sublimation curve does not explain.</p>
-    <p>"Liquid above the critical pressure" is the largest miss on average: 68% instantly, 13% with reasoning allowed, or 65% and 15% on the 18 models tested both ways. Supercritical answers make up 39 of those 68 percentage points and 1 of the 13. The fluid changes smoothly across the critical temperature and pressure lines, so beside those lines the word is a naming miss rather than a physics miss, but only 13 of the 39 lie within 65 K of the critical temperature. The other 26 lie further below it, 6 of them below 400 K, where water is an ordinary dense liquid. Nearly all of "Vapor above the critical temperature" is the same word, more than half of it over a decade below the critical pressure. Counting every supercritical answer in those two rows as right, the liquid row falls to 29% and 11%. "Vapor below 0 °C" is then the largest miss instantly, at 56%, and roughly level with the liquid row with reasoning allowed, at 12% against 11%.</p>
     <fieldset class="control">
-      <legend>Condition</legend>
-      <div class="segments" id="regionCondition"></div>
+      <legend>Units in the prompt</legend>
+      <div class="segments" id="framingControl"></div>
     </fieldset>
-    <div class="table-wrap"><table class="scores regions" id="regionTable"></table></div>
-  </section>
-
-  <section class="section" aria-labelledby="units-title">
-    <header>
-      <h2 id="units-title">The same conditions in different units</h2>
-      <p id="unitsNote">Every point of the 32 × 32 grid was asked in six notations (16 × 16 with reasoning allowed): kelvin or Celsius, with pascals, megapascals or atmospheres. Two notations were also asked twice, which sets the noise floor, so a model only has a notation problem if its dots sit apart. Instantly, all 22 do, by up to 0.20. Noise can hide a gap: GPT-4o has the lowest agreement across units of any model, 75%, but it agrees with itself on only 81% of repeats, so its gap is only 0.06.</p>
-      <p>No unit is bad for everyone. Celsius versus kelvin makes no overall difference to instant balanced accuracy (0.01, interval −0.01 to 0.03), and atmospheres lift balanced accuracy only on everyday water (250–400 K, 10 kPa to 10 MPa, 57 points at 32 × 32), by 0.05 over pascals (0.01 to 0.08). Most of the damage is specific to each model, though Celsius shifts cold answers from ice toward vapor across models, cutting misses of the vapor below 0 °C by 0.12 (0.04 to 0.20) and adding 0.06 on ordinary ice (0.01 to 0.11). Sonnet 4.5 misses all of the vapor below 0 °C in kelvin and megapascals and almost none of it in atmospheres. Sonnet 4.6 misses 73–100% of it in every notation except Celsius and megapascals, where it misses 4%. Part of a gap can be one word: forgive supercritical on fluid, and Opus 5's gap falls from 0.16 to 0.05.</p>
-      <p>A change of unit can also change the number's form, so a gap is not purely a unit effect, and no arm rewords a prompt without changing its units. At 64 × 64, at the switch to 1.000e6 pascals, where the true answer does not change, vapor answers on Haiku 5.5, GPT-5.2 and GPT-6 Luna fall 24 to 48 percentage points more than the average at the same pressures in megapascals and atmospheres, and clearly more than in either alone. GPT-5.1 falls 49 points, but its megapascals fall 38 at the same place, with no scientific notation involved. Only those three show a step that neither control shares, against about 1 of the 16 at cuts where pascals do not change form. The contrast with the average alone clears zero on 7 at the switch and about 4 at those cuts, so a count of models clear of zero says little. Megapascals cross 1.000 at the same pressure, and within 0.15 decades of it GPT-4.1, GPT-5.1 and GPT-4o lose 30 to 41 points of vapor.</p>
-      <p>Choose a model to compare its maps. Numbers here are at 32 × 32 unless a sentence says otherwise, the finest grid where every instant model has a repeat, and agreement with reasoning allowed is at 16 × 16. Miss rates therefore differ from the 64 × 64 table above: on its 64 × 64 maps Sonnet 4.6 misses 63–98% of the vapor below 0 °C, and 8% in Celsius and megapascals.</p>
-    </header>
-    <div class="unit-controls">
-      <div class="control">
-        <label for="unitsModel">Model</label>
-        <select id="unitsModel"></select>
+    <fieldset class="control">
+      <legend>Show</legend>
+      <div class="segments" id="viewControl"></div>
+    </fieldset>
+    <div class="readout">
+      <div class="prompt" id="prompt"></div>
+      <div class="verdict">
+        <div><small>Model said</small><b id="said">–</b></div>
+        <div><small>IAPWS</small><b id="actual">–</b></div>
       </div>
-      <fieldset class="control">
-        <legend>Condition</legend>
-        <div class="segments" id="unitsCondition"></div>
-      </fieldset>
+      <table class="readings" id="readings"></table>
     </div>
-    <div class="legend flush" id="unitLegend"></div>
-    <p class="grid-note" id="unitGrid"></p>
-    <div class="unit-row" id="unitRow"></div>
-    <div class="chart" id="unitsChart"></div>
-    <div class="chart-key" id="unitsKey"></div>
-    <p id="boilNote">The most familiar fact in the experiment, read off each notation's instant map. This chart does not change with the condition switch above. Each row runs from the lowest to the highest reading across up to six notations, and the line marks 373 K. A reading is one split fitted to the 88 answers between 0.3 and 3 atm at 32 × 32, with ice counted alongside liquid. It needs at least three liquid answers below the split, so only 104 of a possible 132 maps give one, and Haiku 5.5 gives none. Readings are rough: a plain repeat moves one by 10 K at the median and by more than 20 K one time in five, and of the 79 readings that also exist at 64 × 64, 28% move by more than 20 K, up to 154 K.</p>
-    <p>Instantly, Haiku 4.5 ranges over 206 K, from 414 K to 619 K. Sonnet 4.6 never comes near the truth, at 451 K to 635 K here and 465 K to 553 K on its 64 × 64 maps. GPT-6 Sol's six readings span 17 K, all within 12 K of the truth. At 64 × 64 the steadiest three, GPT-5.6 Sol, GPT-6.1 Terra and GPT-6 Sol, span 6 K to 16 K, all within 10 K of the truth.</p>
-    <div class="chart" id="boilChart"></div>
-    <div class="chart-key" id="boilKey"></div>
-  </section>
+  </div>
+</div>
 
-  <section class="section" aria-labelledby="thought-title">
-    <header>
-      <h2 id="thought-title">Where models reason</h2>
-      <p id="thoughtNote">Nine models skip reasoning on 11% to 89% of replies, and darker cells took more of it. Near means within a sixteenth of the map from a boundary or critical line. Eight of the nine reason more often near a line, and all nine spend more tokens there. Near a line stands in for hard on three of the four models with an instant arm: they miss 28–41% of nearby points and 5–12% of the rest. Opus 5 does not fit, at 37% and 38%, because most of its errors are hot gas far from any line. The link to their own instant errors is the one given in the findings above, and it is mostly regional on Sonnet 5.5 and Opus 4.8, falling from 53 and 31 points to 5 and 9 within 16 × 16 cells. On Opus 5 most of it stays, 11 points falling to 7, and Sonnet 5 goes from −1 overall to 4 within cells. Sonnet 5 reasons on fewer points near a line, 80% against 88%, but spends more tokens there, 151 a reply against 93.</p>
-      <p>Below 100 MPa the tracing is clean: Opus 5.5 reasons on 71% of nearby points and 9% of the rest. Above 1 GPa reasoning fills most maps: six of the nine reason on 90–100% of those points, Opus 4.8 on 78%, Sonnet 5 on 66% and Fable 5.1 on 35%. On the hot points at or above 1 GPa and far from any line, five models reason every time, Opus 4.8 on 86%, Sonnet 5.5 on 81%, Fable 5.1 on 65% and Sonnet 5 on 28%.</p>
-      <p>Fable 5.1, Opus 5.5 and Sonnet 5.5 are the most selective. Each panel and its two shares use that model's finest grid: 64 × 64 for Opus 4.8, Sonnet 5 and Opus 5, 128 × 128 for the rest. Models that reason on nearly every reply are left out.</p>
-    </header>
-    <div class="thoughts" id="thoughts"></div>
-    <div class="chart-key" id="thoughtKey"></div>
-  </section>
+</section><section class="section" aria-labelledby="what-the-maps-show"><header><h2 id="what-the-maps-show">What the maps show</h2><p>Scores use kelvin and megapascals at 64 × 64 unless a sentence says otherwise.</p>
+</header><div class="notes"><div><h3>Tidy is not the same as right</h3>
+<p>Instant maps look tidy: 84–98% of points sit in the largest connected region of their phase, against 100% for the truth. But their balanced accuracy is only 0.63 to 0.83.</p>
+<p>We also checked physical order. We rank the phases solid, liquid, supercritical, vapor, from densest to lightest. More pressure should push water toward the solid end of that list, and more heat toward the vapor end. Where neighboring answers differ, the order is physical 54–69% of the time. The truth scores 94% on the same points and a random map scores about 50%. The truth falls short of 100% for two reasons: ordinary ice is less dense than water, which breaks this ranking, and the random placement of points adds false steps.</p>
+<p>Six of the eight regions of the map are mostly right, at 9–27% wrong on average. The big misses are liquid above the critical pressure (68% wrong) and vapor below 0 °C (56% wrong). On five maps, most of the ordinary liquid below the critical pressure is missing.</p>
+</div><div><h3>Four facts beat every instant map</h3>
+<p>A sketch built from the triple point, the critical point, ice melting at 0 °C and one latent heat scores 0.94. No model answering instantly scores above 0.83. Across all six sets of units at 32 × 32, the best of the 132 maps is Opus 4.7 in kelvin and pascals, at 0.90.</p>
+<p>The sketch is not better everywhere. It has no ice above 0 °C, so 21 of the 22 instant maps beat it on high-pressure ice. GPT-4o and GPT-6 Luna also beat its melting curve. The sketch's layout does not follow from the four facts. It was chosen after a small trial run. It also uses the textbook definition of supercritical, which the prompt does not state.</p>
+<p>At 1 atm, water boils at 373 K. Answering instantly, 11 of the 18 models tested both ways get within 15 K of that, and one gives too few liquid answers to read a boiling point. With reasoning allowed, all 18 get within 15 K.</p>
+</div><div><h3>OpenAI's boiling curve improved, and its melting curve overshot</h3>
+<p>Boiling curve error is measured in decades of pressure, and one decade is a factor of 10. OpenAI's instant error fell from about 2 decades on GPT-4o mini to about 0.2 on GPT-5.5 and GPT-6 Sol. This fall is clear in all six sets of units over OpenAI's full history, but not since September 2025.</p>
+<p>Anthropic shows no clear trend in this error in any units. Its boiling curve did rise, though, from far too low on Sonnet 4.5 to the truth on Sonnet 5.5. The two providers' falls in error are too close to tell apart.</p>
+<p>Melting curve error did not fall. It runs from 27 to 107 K, and the worst values are on recent models, which put high-pressure ice far too hot. Thirteen of the 22 instant models, 12 of them from 2026, turn hot compressed liquid into ice below 1 GPa. At those temperatures the true melting pressure is 3 to 12 GPa. Twelve of these models were also tested with reasoning allowed, and 10 of them then put the melting curve above 1 GPa.</p>
+</div><div><h3>Allowing reasoning improved all 18 models tested both ways</h3>
+<p>Balanced accuracy rose on all 18, by a median of 0.20 and by at least 0.06. Median melting curve error fell from 77 K to 20 K. Median boiling curve error fell from 0.58 to 0.006 decades, and 23 of the 24 maps with reasoning allowed have an error at or below that of the best instant map, 0.18 decades.</p>
+<p>The melting curves of GPT-5.6 Sol, GPT-6 Astra and GPT-6.1 Sol match IAPWS at all but one or two of 39 pressures, on a grid with cells 11 K wide.</p>
+</div><div><h3>Instant answers depend on the units</h3>
+<p>At 32 × 32, all 22 instant models change their answers more when the units change than on a plain repeat. Sonnet 4.6 agrees with itself on 96% of repeats but only 76% of unit changes. Opus 5 calls hot gas below the critical pressure supercritical 85–89% of the time in kelvin and 18–22% of the time in Celsius.</p>
+<p>With reasoning allowed, at 16 × 16, the gap between repeats and unit changes is at most 0.06. For 18 of 24 models it is too small to tell from zero.</p>
+</div><div><h3>Models reason most near the boundaries</h3>
+<p>Nine models often skip reasoning. Eight of them reason more often near a boundary or critical line, and all nine spend more tokens there. Opus 5.5 reasons on 79% of nearby points and 20% of the rest. Sonnet 5.5 reasons on 76% and 17%. Sonnet 5 is the exception. It reasons on fewer points near a line, 80% against 88%, but still spends more tokens there, 151 a reply against 93.</p>
+<p>Three of the four models we can test also reason more often on the points they get wrong when answering instantly. Sonnet 5.5 reasons on 82% of the points it gets wrong instantly and 28% of those it gets right. Opus 4.8 reasons on 79% and 49%, and Opus 5 on 75% and 65%. Much of this is location: when we compare only points in the same 16 × 16 grid cell, those gaps of 53, 31 and 11 percentage points shrink to 5, 9 and 7. Sonnet 5 shows no such link overall, at 85% and 85%.</p>
+</div></div></section><section class="section" aria-labelledby="what-allowing-reasoning-changes"><header><h2 id="what-allowing-reasoning-changes">What allowing reasoning changes</h2><p>Each row is one model. A hollow circle is the model answering instantly. A filled circle is the same model with reasoning allowed. The vertical line is the four-fact sketch.</p>
+<p>Haiku 5.5 gains the most, from 0.63 to 0.96, because instantly it almost never says liquid. If we accept the word supercritical for any fluid, GPT-5.5 gains the most instead, 0.31 against 0.19 for Haiku 5.5. Sonnet 5 gains the least, from 0.79 to 0.85. With reasoning allowed it calls 59% of hot gas supercritical, up from 24% instantly. It is the only one of the 18 whose vapor score falls.</p>
+<p>Fourteen of 24 models beat the sketch with reasoning allowed. Nine of them are among the 18 tested both ways: seven of eight at OpenAI and two of ten at Anthropic. The two providers share no reasoning setting, so this split is not a fair comparison. GPT-5.1 and Sonnet 4.5 fall just short of the sketch and GPT-6 Luna just passes it, but all three are within sampling error on the 4,096 points of the 64 × 64 grid. On its 128 × 128 map, Luna leads by 0.012 (0.006 to 0.018).</p>
+<p>Allowed does not mean used. Settings differ between models, and some rarely reason: Fable 5.1 does so on 11% of replies. GPT-6 Astra averages 26 reasoning tokens a reply and scores 0.99. The table under &quot;Every score&quot; gives each model's share of replies that reasoned.</p>
+</header><div class="chart" id="reasoningChart"></div>
+<div class="chart-key" id="reasoningKey"></div>
 
-  <section class="section" aria-labelledby="table-title">
-    <header>
-      <h2 id="table-title">Every score</h2>
-      <p>Scores are in kelvin and megapascals at 64 × 64, so a row can differ from the explorer, which scores each map at the grid it is drawn on. Replies that reasoned and reasoning tokens pool every notation and grid.</p>
-    </header>
-    <details>
-      <summary>Show the table</summary>
-      <div class="table-wrap"><table class="scores" id="scoreTable"></table></div>
-    </details>
-  </section>
+</section><section class="section" aria-labelledby="do-the-boundaries-move-toward-the-truth"><header><h2 id="do-the-boundaries-move-toward-the-truth">Do the boundaries move toward the truth?</h2><p>Partly. When models answer instantly, only OpenAI's boiling curve shows a clear fall in error, over its full history. With reasoning allowed, only Anthropic's melting curve does, and only just.</p>
+<p>Each line marks where one model stops saying vapor (boiling) or solid (melting) at 64 × 64, whatever it says next. Each line is smoothed by taking the median of five neighboring grid lines, and it is colored by release date. The heavy lines are IAPWS.</p>
+<p>When models answer instantly, boiling curves spread over orders of magnitude of pressure, and newer models gather around the truth. Melting lines gather in the wrong place. Of the 14 lines from 2026, 13 sit at 0.7 GPa or below at 400 K, where the truth is 2.8 GPa, and 10 stay at 2 GPa or below at 600 K, where the truth is 9 GPa. The 14th, Haiku 5.5, goes the other way and stops at 342 K.</p>
+<p>The melting error comes from the top of the map. Over the 29 pressures below 209 MPa it runs from 8 to 43 K. Over the 10 pressures above 209 MPa it runs from 58 K to at least 382 K. Most recent models put ice far too hot there, and GPT-4o mini, GPT-4o, GPT-4.1 and both Haikus put it too cold.</p>
+<p>The number of models that turn hot compressed liquid into ice below 1 GPa depends on the units. It is 13 of 22 in kelvin and megapascals at 64 × 64, and 9 to 14 across units at 32 × 32.</p>
+<p>With reasoning allowed, boiling curves land on the truth and most melting lines rise along it. Twelve of the 13 models that put ice below 1 GPa were tested with reasoning allowed, and six of the 12 reach about 6 GPa between 400 and 640 K, which is what the true phases give on the same points. The ten melting lines closest to the truth are all from 2026, but so are 18 of the 24 models, and some 2026 models, such as Sonnet 5, still sit far below the truth.</p>
+</header><div class="two" id="fanCharts"></div>
+<div class="chart-key" id="fanKey"></div>
 
-  <section class="section" aria-labelledby="method-title">
-    <header>
-      <h2 id="method-title">How this was done</h2>
-    </header>
-    <div class="notes"><div>
-        <h3>Questions</h3>
-        <p>Each question is one user message: "Pure water at equilibrium, at 450.00 kelvin and 2.000 megapascals: solid, liquid, vapor, or supercritical? Do not say anything else." Pressures are plain decimals from 0.001 up to 1,000,000 of the unit and scientific notation outside that range, such as 1.230e-8 megapascals. The request sets no system prompt, though Anthropic adds its own describing the schema. The grid holds one jittered point per cell, from 16 × 16 up to 128 × 128, over 170–900 K and 0.01 Pa to 20 GPa. A draw within 2 K or 0.03 decades of a boundary or critical line is redrawn in the same cell, so no cell is empty and no label turns on where a curve sits within its IAPWS uncertainty.</p>
-      </div>
-      <div>
-        <h3>Truth</h3>
-        <p>IAPWS R14-08 for the melting and sublimation curves, and the saturation equation of Wagner and Pruss from IAPWS SR1-86(1992), which agrees with IAPWS-95 to within 0.01%. Supercritical means above both the critical temperature and the critical pressure. Hot gas below the critical pressure counts as vapor, and cold fluid above it counts as liquid. Those two edges are naming conventions rather than phase boundaries, and the prompt does not state them.</p>
-      </div>
-      <div>
-        <h3>No tools</h3>
-        <p>The request code accepts a fixed list of keys, none of which can carry a tool, and raises on anything else. A schema enforced by each provider limits a reply to the four phase words. Of about 1.2 million replies, 23 escaped it: two bare phase words count as that word, and the other 21 count as wrong. Fallbacks are off.</p>
-      </div>
-      <div>
-        <h3>Two conditions</h3>
-        <p>Instant means no reasoning. Reasoning allowed means a setting that let the model reason in tests, low on all but one model: a 1,024-token budget on the five oldest Claude models, adaptive thinking at low effort on Opus 4.8, Opus 5, Sonnet 5.5 and Haiku 5.5, medium effort on Sonnet 5, where low effort skipped thinking on most calls, and low effort on eight OpenAI models. Those tests are not stored here. The six models that cannot turn reasoning off run at their lowest effort. GPT-4o, GPT-4o mini and GPT-4.1 have no reasoning. Opus 4.7 never engaged adaptive thinking in 15 hand-run calls, which are not stored here, and it rejects a fixed budget.</p>
-      </div>
-      <div>
-        <h3>Scoring</h3>
-        <p>Balanced accuracy averages the four phases, because 61% of the grid counts as vapor here, 26 percentage points of it hot gas above the critical temperature. Boundary error compares a model's boundary with the one the true labels give on the same points, so a perfect map scores 0. Sublimation is scored by region, because many maps have no such boundary to measure. Trends in kelvin and megapascals use the 64 × 64 grid, the finest that every model has. Trends across notations use 32 × 32.</p>
-        <p>These scores use the textbook definition of supercritical and call hot gas vapor. Accepting supercritical for hot gas below the critical pressure moves the best instant score from 0.83 to 0.84 and the median gain from reasoning from 0.20 to 0.19. Also accepting it for fluid above the critical pressure from 0.9 of the critical temperature moves them to 0.87 and 0.17, and at any temperature to 0.92 and 0.14. The sketch stays at 0.94 because it uses this naming, and it still beats every instant map.</p>
-        <p>About half the weight of balanced accuracy sits on points whose class is set by the critical temperature and pressure lines, and OpenAI's instant trend depends on them: 0.05 a year (0.01 to 0.10) as scored, 0.04 (−0.001 to 0.10) accepting supercritical on hot gas, 0.03 (−0.02 to 0.10) also from 0.9 of the critical temperature, and −0.02 (−0.09 to 0.06) at any temperature. That last tolerance also credits a map for calling water at 300 K supercritical, so it hides ordinary liquid the map is missing. The five OpenAI models that largely stop saying supercritical on compressed liquid, GPT-5.4, GPT-5.5, GPT-5.6 Sol, GPT-6 Sol and GPT-6.1 Terra (0–11% of it, against 84–94% on the three oldest), do say liquid more, 51–69%, but they now say ice on 30–45% of it, against 3–8% on the three oldest.</p>
-      </div>
-      <div>
-        <h3>Cost</h3>
-        <p>The run cost $796: $462 at Anthropic and $334 at OpenAI, all at Batch or Flex prices, half the standard rate, computed from the tokens each API reported.</p>
-      </div>
-      <div>
-        <h3>Limits</h3>
-        <p>Retirements cut Anthropic's history off at September 2025 and OpenAI's at July 2024, so the two lines cover different spans. Release date stands in for generation. Reasoning settings differ by model, and newer models reason less at both providers, so a reasoned trend does not isolate generation. Default sampling applies throughout, and each prompt is asked once or twice. Intervals are not adjusted for how many were examined: 26 of 143 trends and 13 of 84 notation contrasts exclude zero. They resample models, and consecutive releases are related. Ice VII above the critical temperature is barely sampled. Six GPT-6.1 Terra answers survive without their raw replies, after an id collision that is now fixed. The harness, the analysis and this page were written with Claude Code running Claude Opus 5.5, which is one of the graded models.</p>
-      </div>
-      <div>
-        <h3>Sources</h3>
-        <ol class="sources">
-          <li><a href="https://iapws.org/technical-guidance/release/MeltSub">IAPWS R14-08(2011)</a>, the pressure along the melting and sublimation curves.</li>
-          <li><a href="https://iapws.org/technical-guidance/release/Supp-sat">IAPWS SR1-86(1992)</a>, saturation properties.</li>
-          <li><a href="https://outsidetext.substack.com/p/how-does-a-blind-model-see-the-earth">How does a blind model see the Earth?</a> by henry, the map experiment this one follows.</li>
-        </ol>
-      </div></div>
-  </section>
+</section><section class="section" aria-labelledby="across-generations"><header><h2 id="across-generations">Across generations</h2><p>This chart shows balanced accuracy by release date in kelvin and megapascals. Lines join models of the same family. Yearly changes are Theil-Sen slopes, a line fit that outliers barely move, with 95% bootstrap intervals in brackets. A trend is clear when its interval does not include zero.</p>
+<p>Since September 2025, the period both providers cover, neither instant trend is clear. OpenAI gains 0.05 a year (−0.03 to 0.25) and Anthropic 0.00 (−0.21 to 0.11). Over OpenAI's full history the gain is the same 0.05 a year, with a narrower interval (0.01 to 0.10). That result depends on GPT-4o mini, GPT-4o and GPT-4.1. Remove any one of them, or any one of the three newest instant models, and the interval includes zero again.</p>
+<p>Across the six sets of units at 32 × 32, OpenAI's slope runs from 0.04 to 0.11, and whether the trend is clear changes too. In all three sets of units that use Celsius, the trend is clear even since September 2025. In kelvin and pascals it is not clear even over the full history (−0.02 to 0.08).</p>
+<p>With reasoning allowed, neither provider shows a clear gain in accuracy: OpenAI 0.01 a year (−0.02 to 0.06) and Anthropic 0.02 (−0.05 to 0.11).</p>
+<p>Instant boiling curve error falls 0.49 decades a year at OpenAI (0.13 to 0.85) and 0.75 at Anthropic (−0.13 to 1.99). These two falls are too close to tell apart (difference 0.26, −0.9 to 1.5). Anthropic's curve itself rose 1.55 decades a year (0.43 to 2.94), from far too low on Sonnet 4.5 to the truth on Sonnet 5.5. OpenAI's shows no such move.</p>
+<p>In kelvin and megapascals, instant melting curve error rises at both providers, but neither rise is clear. OpenAI's melting curve moved 42 K a year hotter on average (15 to 74), and it went past the truth, not onto it. It went from 13–45 K too cold on the three oldest models to 18–83 K too hot from GPT-5.4 on. All of that move is above 209 MPa, where those models went from 46–193 K too cold to 65–351 K too hot. Since September 2025 this swing is not clear (−47 to 93).</p>
+<p>With reasoning allowed, melting curve error falls about 27 K a year at Anthropic (0.5 to 60). This is only just clear. Remove the Fable, Haiku or Opus models, or any one of eight of Anthropic's 13 models, and the interval includes zero. At OpenAI it falls 7.5 K a year (−6 to 22), which is not clear.</p>
+<p>Answering instantly, small models lag on the boiling curve, ranking 15th to 21st of 22. GPT-6 Luna is an odd case. Its boiling error is 0.82 decades, yet it has the best instant balanced accuracy, 0.83, and the second-lowest melting error, 27 K. Haiku 5.5 has the worst balanced accuracy, 0.63, and it says no liquid on 25 of the 33 lines used to measure boiling error.</p>
+</header><div class="two" id="timeCharts"></div>
+<div class="chart-key" id="timeKey"></div>
+
+</section><section class="section" aria-labelledby="where-the-picture-breaks"><header><h2 id="where-the-picture-breaks">Where the picture breaks</h2><p>Darker cells are points where more models answered wrong, at 64 × 64.</p>
+<p>When models answer instantly, errors pile up in four places. The first is liquid above the critical pressure, which models call supercritical or ice. The second is vapor below 0 °C. The third is the top of the boiling curve. The fourth is hot gas just below the critical pressure, where 92% of the wrong answers are the word supercritical.</p>
+<p>With reasoning allowed, most of this clears. On the 18 models tested both ways, the share wrong falls from 61% to 14% across three regions: liquid above the critical pressure, vapor below 0 °C, and vapor within a decade below the critical pressure. What remains lies along the top of the melting curve, in the hot high-pressure corner and in the cold low-pressure corner. There is also a pale wash over hot vapor, where Sonnet 5, Opus 5, Sonnet 4.6 and Haiku 4.5 say supercritical. Across all 24 models, that wash holds 36% of the remaining wrong answers.</p>
+</header><div class="missed" id="missedMaps"></div>
+<div class="chart-key" id="missedKey"></div>
+
+<p>The table below shows the same errors by region: the share of each region's points a model got wrong. &quot;Vapor below 0 °C&quot; is the vapor side of the sublimation curve.</p>
+<p>Answering instantly in kelvin and megapascals, Sonnet 4.5, GPT-4o mini, GPT-4.1, Haiku 4.5 and Opus 4.7 miss 92–100% of the vapor below 0 °C. They draw a wall of ice down to near vacuum. From GPT-5.2 on, most OpenAI models go the other way. They get this vapor right by putting the sublimation curve 0.8 to 3.6 decades too high, and they lose ordinary ice instead, missing 22–54% of it.</p>
+<p>&quot;Liquid above the critical pressure&quot; is the largest miss on average: 68% instantly and 13% with reasoning allowed. Supercritical answers make up 39 of those 68 percentage points and 1 of the 13. Right next to the critical lines, the word is a naming miss and not a physics miss. But only 13 of the 39 percentage points lie within 65 K of the critical temperature. The other 26 lie further below it, 6 of them below 400 K, where water is an ordinary dense liquid.</p>
+<p>If we count every supercritical answer as right in the rows &quot;Liquid above the critical pressure&quot; and &quot;Vapor above the critical temperature&quot;, the liquid row falls to 29% instantly and 11% with reasoning allowed. &quot;Vapor below 0 °C&quot; is then the largest miss instantly, at 56%.</p>
+<fieldset class="control">
+  <legend>Condition</legend>
+  <div class="segments" id="regionCondition"></div>
+</fieldset>
+<div class="table-wrap"><table class="scores regions" id="regionTable"></table></div>
+
+</section><section class="section" aria-labelledby="the-same-conditions-in-different-units"><header><h2 id="the-same-conditions-in-different-units">The same conditions in different units</h2><p>We asked every point of the 32 × 32 grid in six sets of units (16 × 16 with reasoning allowed): kelvin or Celsius, with pascals, megapascals or atmospheres. We also asked two of the sets twice, which measures noise. A model has a units problem only if it agrees with itself less across units than across repeats. In the chart below, its two dots then sit apart. Answering instantly, all 22 do, by up to 0.20. Noise can hide a gap: GPT-4o has the lowest agreement across units of any model, 75%, but it agrees with itself on only 81% of repeats, so its gap is only 0.06.</p>
+<p>No unit is bad for every model. Celsius or kelvin makes no overall difference to instant balanced accuracy (0.01, −0.01 to 0.03). Atmospheres help only on everyday water (250–400 K, 10 kPa to 10 MPa), by 0.05 over pascals (0.01 to 0.08). Most of the damage is specific to each model. Sonnet 4.5 misses all of the vapor below 0 °C in kelvin and megapascals and almost none of it in atmospheres. Sonnet 4.6 misses 73–100% of it in every set of units except Celsius and megapascals, where it misses 4%.</p>
+<p>Changing the unit can also change how a number is written, so a gap is not purely a unit effect. Pressures in pascals switch to scientific notation at <code>1.000e6 pascals</code>, and the true answer does not change there. Yet at 64 × 64, vapor answers from Haiku 5.5, GPT-5.2 and GPT-6 Luna drop at that switch by 24 to 48 percentage points more than the average drop at the same pressures in megapascals and atmospheres.</p>
+<p>Choose a model to compare its maps. Numbers here are at 32 × 32 unless a sentence says otherwise, and agreement with reasoning allowed is at 16 × 16. So miss rates differ from the 64 × 64 table above.</p>
+</header><div class="unit-controls">
+  <div class="control">
+    <label for="unitsModel">Model</label>
+    <select id="unitsModel"></select>
+  </div>
+  <fieldset class="control">
+    <legend>Condition</legend>
+    <div class="segments" id="unitsCondition"></div>
+  </fieldset>
+</div>
+<div class="legend flush" id="unitLegend"></div>
+<p class="grid-note" id="unitGrid"></p>
+<div class="unit-row" id="unitRow"></div>
+<div class="chart" id="unitsChart"></div>
+<div class="chart-key" id="unitsKey"></div>
+
+<p>This chart shows the boiling point at 1 atm, read off each instant map. It always shows instant answers, even if you choose &quot;Reasoning allowed&quot; above. Each row runs from the lowest to the highest reading across up to six sets of units, and the line marks 373 K. A reading needs at least three liquid answers below the boiling point, so only 104 of a possible 132 maps give one, and Haiku 5.5 gives none. Readings are rough: on a plain repeat, a reading moves by a median of 10 K.</p>
+<p>Haiku 4.5 ranges over 206 K, from 414 K to 619 K. Sonnet 4.6 never comes near the truth, at 451 K to 635 K. GPT-6 Sol's six readings span 17 K, all within 12 K of the truth.</p>
+<div class="chart" id="boilChart"></div>
+<div class="chart-key" id="boilKey"></div>
+
+</section><section class="section" aria-labelledby="where-models-reason"><header><h2 id="where-models-reason">Where models reason</h2><p>Nine models skip reasoning on 11% to 89% of replies. Darker cells took more reasoning. Near means less than a sixteenth of the way across the map from a boundary or critical line.</p>
+<p>Eight of the nine reason more often near a line, and all nine spend more tokens there. Points near a line are harder for three of the four models with instant answers to compare. They miss 28–41% of nearby points and 5–12% of the rest. Opus 5 does not fit, at 37% and 38%, because most of its errors are hot gas far from any line.</p>
+<p>Drawn on the map, the reasoning of Opus 5.5 and Sonnet 5.5 traces the sublimation curve, the boiling curve and the critical pressure. It then fills the map above about 200 MPa on Opus 5.5 and above about 1 GPa on Sonnet 5.5, even in the hot corner where there is no boundary.</p>
+<p>Below 100 MPa the pattern is clean: Opus 5.5 reasons on 71% of nearby points and 9% of the rest. Above 1 GPa, six of the nine reason on 90–100% of points, Opus 4.8 on 78%, Sonnet 5 on 66% and Fable 5.1 on 35%.</p>
+<p>Each panel uses that model's finest grid: 64 × 64 for Opus 4.8, Sonnet 5 and Opus 5, and 128 × 128 for the rest. Models that reason on nearly every reply are left out.</p>
+</header><div class="thoughts" id="thoughts"></div>
+<div class="chart-key" id="thoughtKey"></div>
+
+</section><section class="section" aria-labelledby="every-score"><header><h2 id="every-score">Every score</h2><p>Scores use kelvin and megapascals at 64 × 64, so a row can differ from the explorer, which scores each map on the grid it is drawn on. The columns for replies that reasoned and for reasoning tokens pool every grid and set of units.</p>
+</header><details>
+  <summary>Show the table</summary>
+  <div class="table-wrap"><table class="scores" id="scoreTable"></table></div>
+</details>
+
+</section><section class="section" aria-labelledby="how-this-was-done"><header><h2 id="how-this-was-done">How this was done</h2></header><div class="notes"><div><h3>Questions</h3>
+<p>Each question is one user message: &quot;Pure water at equilibrium, at 450.00 kelvin and 2.000 megapascals: solid, liquid, vapor, or supercritical? Do not say anything else.&quot; We set no system prompt, but Anthropic adds its own that describes the reply format. Pressures are plain decimals from 0.001 up to 1,000,000 of the unit, and scientific notation outside that range, such as 1.230e-8 megapascals.</p>
+<p>The grid has one randomly placed point per cell, from 16 × 16 up to 128 × 128, over 170–900 K and 0.01 Pa to 20 GPa. A point within 2 K or 0.03 decades of a boundary or critical line is redrawn in the same cell, so no label depends on the small uncertainty in the IAPWS curves.</p>
+</div><div><h3>Truth</h3>
+<p>We use IAPWS R14-08 for the melting and sublimation curves, and the saturation equation of Wagner and Pruss from IAPWS SR1-86(1992), which agrees with IAPWS-95 to within 0.01%. Supercritical means above both the critical temperature and the critical pressure. Hot gas below the critical pressure counts as vapor, and cold fluid above it counts as liquid. Those two edges are naming conventions, not phase boundaries, and the prompt does not state them.</p>
+</div><div><h3>No tools</h3>
+<p>The request code accepts a fixed list of keys. None of them can carry a tool, and any other key raises an error. A schema enforced by each provider limits a reply to the four phase words. Of about 1.2 million replies, 23 got past it. Two were a bare phase word and count as that word. The other 21 count as wrong. Automatic fallbacks to another model are off.</p>
+</div><div><h3>Two conditions</h3>
+<p>Instant means no reasoning. Reasoning allowed means a setting that let the model reason in tests. That was a 1,024-token budget on the five oldest Claude models, adaptive thinking at low effort on Opus 4.8, Opus 5, Sonnet 5.5 and Haiku 5.5, medium effort on Sonnet 5, and low effort on eight OpenAI models. The six models that cannot turn reasoning off run at their lowest effort. GPT-4o, GPT-4o mini and GPT-4.1 have no reasoning. Opus 4.7 never used adaptive thinking in 15 test calls, and it rejects a fixed budget.</p>
+</div><div><h3>Scoring</h3>
+<p>Balanced accuracy averages the four phases, because 61% of the grid counts as vapor. Boundary error compares a model's boundary with the one the true labels give on the same points, so a perfect map scores 0. Sublimation is scored by region, because many maps have no such boundary to measure. Trends in kelvin and megapascals use the 64 × 64 grid, the finest that every model has. Trends across units use 32 × 32.</p>
+<p>These scores use the textbook definition of supercritical. Accepting the word for hot gas below the critical pressure moves the best instant score from 0.83 to 0.84. Also accepting it for fluid above the critical pressure, at 0.9 of the critical temperature or hotter, moves it to 0.87. Accepting it at any temperature moves it to 0.92. The sketch stays at 0.94, so it still beats every instant map.</p>
+<p>About half the weight of balanced accuracy sits on points whose true phase depends on the critical temperature and pressure lines, and OpenAI's instant trend depends on those points. It is 0.05 a year (0.01 to 0.10) as scored, and −0.02 (−0.09 to 0.06) if supercritical is accepted at any temperature. But that rule also gives credit for calling water at 300 K supercritical, which hides ordinary liquid a map is missing.</p>
+</div><div><h3>Cost</h3>
+<p>The run cost $796: $462 at Anthropic and $334 at OpenAI, all at Batch or Flex prices, half the standard rate.</p>
+</div><div><h3>Limits</h3>
+<p>Model retirements cut Anthropic's history off at September 2025 and OpenAI's at July 2024, so the two providers cover different periods. Release date stands in for generation.</p>
+<p>Reasoning settings differ between models, and newer models reason less at both providers. So a trend with reasoning allowed may reflect how much a model reasons, not how new it is.</p>
+<p>Every model uses its default sampling, and each prompt is asked once or twice.</p>
+<p>Intervals are not adjusted for the number of tests: 26 of 143 trends and 13 of 84 unit comparisons exclude zero. Intervals also come from resampling models, and consecutive releases are related, so an interval just clear of zero is weak evidence.</p>
+<p>Ice VII above the critical temperature is barely sampled. Six GPT-6.1 Terra answers have no raw reply because of an ID collision, which is now fixed.</p>
+<p>The code, the analysis and this page were written with Claude Code running Claude Opus 5.5, which is one of the graded models.</p>
+</div><div><h3>Sources</h3>
+<ol class="sources">
+<li><a href="https://iapws.org/technical-guidance/release/MeltSub">IAPWS R14-08(2011)</a>, the pressure along the melting and sublimation curves.</li>
+<li><a href="https://iapws.org/technical-guidance/release/Supp-sat">IAPWS SR1-86(1992)</a>, saturation properties.</li>
+<li><a href="https://outsidetext.substack.com/p/how-does-a-blind-model-see-the-earth">How does a blind model see the Earth?</a> by henry, the map experiment this one follows.</li>
+</ol>
+</div></div></section>
 
   <footer class="colophon">
     <p>Answers collected on 31 October 2026.</p>
@@ -678,14 +624,14 @@ ol.sources { margin: 0; padding-left: 20px; font-size: 0.95rem; display: grid; g
     const rows = [
       ["Grid", `${side} × ${side}`],
       ["Balanced accuracy", fixed(scores.balanced_accuracy)],
-      ["Boiling curve error", reading(scores.saturation_mae, 2, "decades")],
+      ["Boiling curve error", reading(scores.saturation_mae, 2, "decades of pressure")],
       ["Melting curve error", reading(scores.melting_mae, 0, "K")],
       ["Boils at 1 atm", reading(scores.boils_at, 0, "K")],
       ["Freezes at 1 atm", reading(scores.freezes_at, 0, "K")],
       [`Agreement across units, ${unitGrid}`, unitScores.cross === undefined ? "–" : `${fixed(100 * unitScores.cross, 0)}%`],
       [`Agreement with itself, K, MPa and °C, atm, ${unitGrid}`, unitScores.retest === undefined || unitScores.retest === null ? "–" : `${fixed(100 * unitScores.retest, 0)}%`],
     ];
-    if (state.condition === "reasoned") rows.push(["Replies that reasoned, this notation", `${fixed(100 * scores.share_thought, 0)}%`]);
+    if (state.condition === "reasoned") rows.push(["Replies that reasoned, these units", `${fixed(100 * scores.share_thought, 0)}%`]);
     $("readings").innerHTML = rows.map(([a, b]) => `<tr><th scope="row">${a}</th><td>${b}</td></tr>`).join("");
     const size = 1000 / side;
     for (const id of ["cursor", "cursorShadow"]) {
@@ -977,7 +923,7 @@ ol.sources { margin: 0; padding-left: 20px; font-size: 0.95rem; display: grid; g
       ticks: [200, 300, 400, 500, 600, 700],
       tickFormat: (t) => `${t} K`,
       reference: { value: 373.124 },
-      label: "The boiling point at one atmosphere each model implies, lowest and highest reading across up to six notations",
+      label: "The boiling point at one atmosphere each model implies, lowest and highest reading across up to six sets of units",
       tip: (r) => `<b>${r.name}</b><br>${D.framings.map((f) => `${f.label}: ${fixed(r.boils[f.key], 0)} K`).join("<br>")}`,
     });
     $("boilKey").innerHTML = `<span><i class="dot hollow"></i>Lowest reading</span><span><i class="dot" style="background:var(--anthropic)"></i><i class="dot" style="background:var(--openai)"></i>Highest reading</span><span>Vertical line: the true 373 K</span>`;
@@ -989,7 +935,7 @@ ol.sources { margin: 0; padding-left: 20px; font-size: 0.95rem; display: grid; g
     const entries = D.framings.map((f) => D.maps[key(state.unitsModel, state.unitsCondition, f.key)]);
     const level = Math.max(...entries.map((entry) => entry.level));
     const atlasGap = level === D.level ? "" : `, so a score here can differ from the ${gridName(D.level)} atlas`;
-    $("unitGrid").textContent = `Maps and scores at ${gridName(level)}, the finest grid this model has in all six notations${atlasGap}.`;
+    $("unitGrid").textContent = `Maps and scores at ${gridName(level)}, the finest grid this model has in all six sets of units${atlasGap}.`;
     D.framings.forEach((framing, k) => {
       const figure = document.createElement("figure");
       const ba = (byId[state.unitsModel].byFraming[state.unitsCondition][framing.key] || {})[level];
