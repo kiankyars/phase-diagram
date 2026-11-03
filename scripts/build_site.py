@@ -216,7 +216,6 @@ def main() -> None:
         models.append(entry)
 
     data = {
-        "totalAnswers": int(sum(len(a) for a in all_answers.values())),
         "side": side,
         "T": [round(float(v), 2) for v in points["T_K"]],
         "p": [float(f"{v:.7g}") for v in points["p_Pa"]],

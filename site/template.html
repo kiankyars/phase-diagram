@@ -77,13 +77,6 @@ h2 { font-size: clamp(1.9rem, 4vw, 2.6rem); }
 h3 { font-size: 1.35rem; }
 p { margin: 0; max-width: 66ch; }
 a { color: var(--accent); }
-.eyebrow {
-  font-family: var(--data);
-  font-size: 0.74rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--ink-3);
-}
 .section { display: grid; gap: 22px; min-width: 0; }
 .section > header { display: grid; gap: 10px; }
 .lede { font-size: 1.22rem; line-height: 1.45; max-width: 58ch; }
@@ -845,7 +838,6 @@ ol.sources { margin: 0; padding-left: 20px; font-size: 0.95rem; display: grid; g
   }
 
   function init() {
-    $("totalAnswers").textContent = D.totalAnswers.toLocaleString("en-US");
     buildCurves();
     buildAxes();
     legend($("legend"));

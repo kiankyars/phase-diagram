@@ -1,10 +1,8 @@
-{{eyebrow}}
-
 # What does a language model think water does?
 
-We asked 28 language models about pure water at thousands of temperatures and pressures. From their answers we drew the phase diagram each model implies, and we graded it against the IAPWS reference equations. Answering instantly, no model beats a simple sketch made from four remembered facts. Allowed to reason, half of the 18 models tested both ways beat the sketch, and the best are almost exact.
+We asked 28 language models 1,180,160 questions about pure water at different temperatures and pressures. From their answers we drew the phase diagram each model implies, and we graded it against the IAPWS reference equations. Answering instantly, no model beats a simple sketch made from four remembered facts. Allowed to reason, half of the 18 models tested both ways beat the sketch, and the best are almost exact.
 
-Do newer models do better? It depends on the curve. When OpenAI's models answer instantly, their boiling curve has moved toward the truth and the top of their melting curve has moved past it. Neither trend is clear since September 2025, the period both providers cover. Anthropic's instant answers show no clear fall in error. Instant maps also change with the units in the question. With reasoning allowed, most maps do not, and newer models are not clearly more accurate. We call a trend clear when its 95% interval does not include zero.
+Do newer models do better? It depends on the curve. When OpenAI's models answer instantly, their boiling curve has moved toward the truth and the top of their melting curve has moved past it. Neither trend is clear since September 2025, the period both providers cover. Anthropic's instant answers show no clear fall in error. Instant maps also change with the units in the question. With reasoning allowed, most maps do not, and newer models are not clearly more accurate.
 
 {{stats}}
 
@@ -142,7 +140,7 @@ If we count every supercritical answer as right in the rows "Liquid above the cr
 
 ## The same conditions in different units
 
-We asked every point of the 32 × 32 grid in six sets of units (16 × 16 with reasoning allowed): kelvin or Celsius, with pascals, megapascals or atmospheres. We also asked two of the sets twice, which measures noise. A model has a units problem only if it agrees with itself less across units than across repeats. In the chart below, its two dots then sit apart. Answering instantly, all 22 do, by up to 0.20. Noise can hide a gap: GPT-4o has the lowest agreement across units of any model, 75%, but it agrees with itself on only 81% of repeats, so its gap is only 0.06.
+We asked every point of the 32 × 32 grid in six sets of units (16 × 16 with reasoning allowed): kelvin or Celsius, with pascals, megapascals or atmospheres. We also asked kelvin with megapascals and Celsius with atmospheres a second time, which measures noise. A model has a units problem only if it agrees with itself less across units than across repeats. In the chart below, its two dots then sit apart. Answering instantly, all 22 do, by up to 0.20. Noise can hide a gap: GPT-4o has the lowest agreement across units of any model, 75%, but it agrees with itself on only 81% of repeats, so its gap is only 0.06.
 
 No unit is bad for every model. Celsius or kelvin makes no overall difference to instant balanced accuracy (0.01, −0.01 to 0.03). Atmospheres help only on everyday water (250–400 K, 10 kPa to 10 MPa), by 0.05 over pascals (0.01 to 0.08). Most of the damage is specific to each model. Sonnet 4.5 misses all of the vapor below 0 °C in kelvin and megapascals and almost none of it in atmospheres. Sonnet 4.6 misses 73–100% of it in every set of units except Celsius and megapascals, where it misses 4%.
 
@@ -192,7 +190,7 @@ We use IAPWS R14-08 for the melting and sublimation curves, and the saturation e
 
 ### No tools
 
-The request code accepts a fixed list of keys. None of them can carry a tool, and any other key raises an error. A schema enforced by each provider limits a reply to the four phase words. Of about 1.2 million replies, 23 got past it. Two were a bare phase word and count as that word. The other 21 count as wrong. Automatic fallbacks to another model are off.
+The request code accepts a fixed list of keys. None of them can carry a tool, and any other key raises an error. A JSON schema limits a reply to the four phase words: `output_config.format` at Anthropic and strict `response_format` at OpenAI. Of about 1.2 million replies, 23 got past it. Two were a bare phase word and count as that word. The other 21 count as wrong. Automatic fallbacks to another model are off.
 
 ### Two conditions
 
@@ -204,7 +202,7 @@ Balanced accuracy averages the four phases, because 61% of the grid counts as va
 
 These scores use the textbook definition of supercritical. Accepting the word for hot gas below the critical pressure moves the best instant score from 0.83 to 0.84. Also accepting it for fluid above the critical pressure, at 0.9 of the critical temperature or hotter, moves it to 0.87. Accepting it at any temperature moves it to 0.92. The sketch stays at 0.94, so it still beats every instant map.
 
-About half the weight of balanced accuracy sits on points whose true phase depends on the critical temperature and pressure lines, and OpenAI's instant trend depends on those points. It is 0.05 a year (0.01 to 0.10) as scored, and −0.02 (−0.09 to 0.06) if supercritical is accepted at any temperature. But that rule also gives credit for calling water at 300 K supercritical, which hides ordinary liquid a map is missing.
+About half the weight of balanced accuracy sits on points whose true phase depends on the critical temperature and pressure lines, and OpenAI's instant trend depends on those points. It is 0.05 a year (0.01 to 0.10) as scored, and −0.02 (−0.09 to 0.06) if supercritical is accepted at any temperature. But that rule also counts "supercritical" as right for water at 300 K and 100 MPa, which is plainly a liquid.
 
 ### Cost
 
@@ -214,15 +212,15 @@ About half the weight of balanced accuracy sits on points whose true phase depen
 
 Model retirements cut Anthropic's history off at September 2025 and OpenAI's at July 2024, so the two providers cover different periods. Release date stands in for generation.
 
-Reasoning settings differ between models, and newer models reason less at both providers. So a trend with reasoning allowed may reflect how much a model reasons, not how new it is.
+Reasoning settings differ between models, so the reasoning comparison is not fully controlled.
 
-Every model uses its default sampling, and each prompt is asked once or twice.
+Models use their default sampling settings, so asking the same question twice can give different answers.
 
-Intervals are not adjusted for the number of tests: 26 of 143 trends and 13 of 84 unit comparisons exclude zero. Intervals also come from resampling models, and consecutive releases are related, so an interval just clear of zero is weak evidence.
+We tested 143 trends and 84 unit gaps without correcting for the number of tests. By chance alone about 7 trends and 4 gaps would look clear. 26 and 13 did.
 
-Ice VII above the critical temperature is barely sampled. Six GPT-6.1 Terra answers have no raw reply because of an ID collision, which is now fixed.
+Ice VII above the critical temperature is barely sampled.
 
-The code, the analysis and this page were written with Claude Code running Claude Opus 5.5, which is one of the graded models.
+The experiment was conducted by Claude Opus 5.5, which is one of the graded models.
 
 ### Sources
 
