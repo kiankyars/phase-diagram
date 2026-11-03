@@ -1,4 +1,4 @@
-"""Recompute the scores, trends and counts the results page and README quote, and write results/claims.json.
+"""Recompute the scores, trends and counts the blog post quotes, and write results/claims.json.
 
 The text is not generated from the data, so this is what keeps it honest. Run it after grading, and
 any number in the text that no longer matches its entry here has gone stale.
