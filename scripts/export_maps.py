@@ -13,6 +13,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
+import pandas as pd
 
 from phase_diagram import grade, grid, truth
 from phase_diagram.framings import FRAMINGS
@@ -20,6 +21,7 @@ from phase_diagram.pipeline import ROOT, load_answers, load_grid
 from phase_diagram.registry import MODELS
 
 OUT = ROOT / "results" / "maps.json"
+READINGS = ["balanced_accuracy", "saturation_mae", "melting_mae", "boils_at", "freezes_at"]
 CHARS = np.array(list(".x0123"))  # MISSING, INVALID, then the phase codes
 
 
@@ -42,12 +44,16 @@ def curves() -> list[list[list[float]]]:
 def main() -> None:
     out = Path(sys.argv[1]) if len(sys.argv) > 1 else OUT
     points = load_grid().sort_values("pid")
+    scores = pd.read_csv(ROOT / "results" / "scores.csv")
+    shared = grade.shared_level(scores)
+    atlas = scores[scores["level"] == shared].set_index(["model", "condition"])["balanced_accuracy"]
     maps, models = {}, []
     for model in MODELS:
         answers = load_answers(model)
         if not len(answers):
             continue
-        models.append({"id": model.id, "label": model.label, "provider": model.provider, "released": model.released})
+        atlas_scores = {c: round(float(atlas[(model.id, c)]), 2) for c in ("instant", "reasoned") if (model.id, c) in atlas.index}
+        models.append({"id": model.id, "label": model.label, "provider": model.provider, "released": model.released, "thinks": model.thinks, "atlas": atlas_scores})
         for condition in ("instant", "reasoned"):
             arm = grade.arm_for(model, condition)
             if arm is None or not (answers["arm"] == arm).any():
@@ -56,8 +62,11 @@ def main() -> None:
                 frame = grade.attempt(answers, points, framing=framing.key, arm=arm)
                 level = grade.complete_level(frame)
                 if level is not None:
-                    score = grade.score_map(frame, level)["balanced_accuracy"]
-                    maps[f"{model.id}|{condition}|{framing.key}"] = {"level": level, "cells": encode(grade.to_image(frame, level)), "score": round(float(score), 3)}
+                    graded = grade.score_map(frame, level)
+                    readings = {k: None if pd.isna(graded.get(k)) else round(float(graded[k]), 3) for k in READINGS}
+                    asked = answers[(answers["arm"] == arm) & (answers["framing"] == framing.key) & (answers["rep"] == 0)]
+                    readings["share_thought"] = round(float((asked["reasoning_tokens"] > 0).mean()), 3)
+                    maps[f"{model.id}|{condition}|{framing.key}"] = {"level": level, "cells": encode(grade.to_image(frame, level)), "scores": readings}
     data = {
         "side": grid.N_FINE,
         "T": [round(float(v), 2) for v in points["T_K"]],
@@ -67,6 +76,7 @@ def main() -> None:
         "truth": encode(grade.to_image(points.assign(pred=points["truth"].astype(np.int8)), 0)),
         "curves": curves(),
         "framings": [{"key": f.key, "label": f.label, "t": f.t_unit, "p": f.p_unit} for f in FRAMINGS],
+        "atlasGrid": grid.SIDES[shared],
         "models": sorted(models, key=lambda m: (m["provider"], m["released"])),
         "maps": maps,
     }
