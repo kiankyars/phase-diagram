@@ -53,7 +53,7 @@ def main() -> None:
         if not len(answers):
             continue
         atlas_scores = {c: round(float(atlas[(model.id, c)]), 2) for c in ("instant", "reasoned") if (model.id, c) in atlas.index}
-        models.append({"id": model.id, "label": model.label, "provider": model.provider, "released": model.released, "thinks": model.thinks, "atlas": atlas_scores})
+        models.append({"id": model.id, "label": model.label, "provider": model.provider, "released": model.released, "family": model.family, "thinks": model.thinks, "atlas": atlas_scores})
         lines = models[-1]["lines"] = {}
         for condition in ("instant", "reasoned"):
             arm = grade.arm_for(model, condition)
