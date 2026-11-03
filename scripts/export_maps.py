@@ -54,10 +54,14 @@ def main() -> None:
             continue
         atlas_scores = {c: round(float(atlas[(model.id, c)]), 2) for c in ("instant", "reasoned") if (model.id, c) in atlas.index}
         models.append({"id": model.id, "label": model.label, "provider": model.provider, "released": model.released, "thinks": model.thinks, "atlas": atlas_scores})
+        lines = models[-1]["lines"] = {}
         for condition in ("instant", "reasoned"):
             arm = grade.arm_for(model, condition)
             if arm is None or not (answers["arm"] == arm).any():
                 continue
+            if condition in atlas_scores:
+                found = grade.boundary_lines(grade.attempt(answers, points, arm=arm), shared)
+                lines[condition] = {name: [[round(float(t), 1), round(float(logp), 2)] for t, logp in rows] for name, rows in found.items()}
             for framing in FRAMINGS:
                 frame = grade.attempt(answers, points, framing=framing.key, arm=arm)
                 level = grade.complete_level(frame)
