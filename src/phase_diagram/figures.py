@@ -493,14 +493,13 @@ def units_gap(units: pd.DataFrame, condition: str, level: int) -> None:
         ax.scatter(row.retest, y, s=58, color=color, edgecolor=SURFACE, linewidth=1.2, zorder=3)
     ax.set_yticks(range(len(chosen)), [named(BY_ID[m]) for m in chosen["model"]], fontsize=10, color=INK)
     ax.set_title(CONDITION_TITLE[condition], loc="left", fontsize=12, fontweight="bold", pad=8)
-    ax.set_xlabel(f"Share of points answered the same way, {grid.SIDES[level]} × {grid.SIDES[level]}")
+    ax.set_xlabel("Share of the map where the two answers match")
     style_chart(ax)
     handles = [
-        Line2D([0], [0], marker="o", ls="", markerfacecolor=SURFACE, markeredgecolor=MUTED, markeredgewidth=1.6, markersize=8, label="Same point, different units"),
-        Line2D([0], [0], marker="o", ls="", markerfacecolor=MUTED, markeredgecolor=SURFACE, markersize=9, label="Same prompt, asked twice"),
-        *provider_handles(),
+        Line2D([0], [0], marker="o", ls="", markerfacecolor=MUTED, markeredgecolor=SURFACE, markersize=9, label="Same question asked twice"),
+        Line2D([0], [0], marker="o", ls="", markerfacecolor=SURFACE, markeredgecolor=MUTED, markeredgewidth=1.6, markersize=8, label="Same question in other units"),
     ]
-    ax.legend(handles=handles, frameon=False, fontsize=10, loc="lower left")
+    ax.legend(handles=handles, frameon=False, fontsize=10, loc="lower right", bbox_to_anchor=(1, 1), ncol=2)
     fig.tight_layout()
     footnote(fig, condition)
     save(fig, f"units_gap_{condition}")
