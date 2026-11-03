@@ -19,7 +19,6 @@ def main() -> None:
     framings = pd.read_csv(results / "framings.csv")
     for condition in ("instant", "reasoned"):
         figures.atlas(condition, scores, references)
-    figures.preview_card()
     figures.reasoning_effect(scores, references)
     figures.generations(scores, references)
     figures.boundary_fan(scores)

@@ -134,7 +134,6 @@ def atlas(condition: str, scores: pd.DataFrame, references: pd.DataFrame) -> Non
     level = grade.shared_level(scores)
     chosen = scores[(scores["condition"] == condition) & (scores["level"] == level)]
     ba = chosen.set_index("model")["balanced_accuracy"].to_dict()
-    sketch_ba = sketch_score(references, level)
     answers = {m.id: load_answers(m) for m in MODELS}
     groups = {}
     for provider in ("anthropic", "openai"):
@@ -166,28 +165,13 @@ def atlas(condition: str, scores: pd.DataFrame, references: pd.DataFrame) -> Non
     label_axes(ax)
     ax.set_title("IAPWS truth", loc="left", fontsize=11, fontweight="bold", pad=4)
 
-    ax = fig.add_subplot(outer[0, 1])
-    sketch = points.assign(pred=grade.sketch_phase(points["T_K"], points["p_Pa"]).astype(np.int8))
-    draw_map(ax, grade.to_image(sketch, 0))
-    ax.set_title("Four-fact sketch", loc="left", fontsize=11, fontweight="bold", pad=4)
-    ax.text(1.0, 1.02, f"{sketch_ba:.2f}", transform=ax.transAxes, ha="right", va="bottom", fontsize=11)
-
-    legend_ax = fig.add_subplot(outer[0, 2:])
+    legend_ax = fig.add_subplot(outer[0, 1:])
     legend_ax.axis("off")
     handles = [Patch(facecolor=color, label=name) for name, color in PHASE_LEGEND]
     handles.append(Patch(facecolor=NO_ANSWER, label="No answer"))
     handles.append(Line2D([0], [0], color=INK, lw=1, label="IAPWS boundary or critical line"))
     legend_ax.legend(handles=handles, loc="upper left", frameon=False, fontsize=11, handlelength=1.1, handleheight=1.1,
                      borderaxespad=0, labelspacing=0.55, bbox_to_anchor=(0.02, 1.0))
-    note = (
-        "The sketch uses four remembered facts: the triple\n"
-        "point, the critical point, ice melting at 0 °C and\n"
-        "one latent heat, joined by the Clausius-Clapeyron\n"
-        "equation, plus a built-in layout and the textbook\n"
-        "definition of supercritical. A model below this\n"
-        "score gets less of the map right than that."
-    )
-    legend_ax.text(0.5, 1.0, note, transform=legend_ax.transAxes, va="top", fontsize=11, color=SECONDARY, linespacing=1.5)
 
     row = 1
     for provider in ("anthropic", "openai"):
@@ -207,36 +191,6 @@ def atlas(condition: str, scores: pd.DataFrame, references: pd.DataFrame) -> Non
     FIGURES.mkdir(parents=True, exist_ok=True)
     fig.savefig(FIGURES / f"atlas_{condition}.png", dpi=170)
     plt.close(fig)
-
-
-def preview_card() -> None:
-    """The image a shared link to the results page unfurls into: the instant atlas, unlabeled."""
-    points = load_grid()
-    images = [
-        grade.to_image(points.assign(pred=points["truth"].astype(np.int8)), 0),
-        grade.to_image(points.assign(pred=grade.sketch_phase(points["T_K"], points["p_Pa"]).astype(np.int8)), 0),
-    ]
-    for model in sorted(MODELS, key=lambda m: m.released):
-        image = model_image(model, points, load_answers(model), "instant")
-        if image is not None:
-            images.append(image)
-
-    columns = 8
-    rows = int(np.ceil(len(images) / columns))
-    fig = plt.figure(figsize=(12, 6.3))
-    tiles = fig.add_gridspec(rows, columns, left=0.042, right=0.958, top=0.685, bottom=0.05, hspace=0.05, wspace=0.05)
-    fig.text(0.042, 0.93, "What does a language model think water does?", fontsize=31, fontweight="bold", va="top")
-    fig.text(0.042, 0.81, f"The IAPWS reference, a four-fact sketch, then {len(images) - 2} models answering instantly, in release order.",
-             fontsize=15, color=SECONDARY, va="top")
-    for k, image in enumerate(images):
-        draw_map(fig.add_subplot(tiles[k // columns, k % columns]), image, line_width=0.45)
-    fig.savefig(ROOT / "results" / "site" / "preview.png", dpi=200)
-    plt.close(fig)
-
-
-def sketch_score(references: pd.DataFrame, level: int) -> float:
-    chosen = references[(references["reference"] == "Four-fact sketch") & (references["level"] == level)]
-    return float(chosen["balanced_accuracy"].iloc[0])
 
 
 def save(fig, name: str) -> None:
@@ -259,7 +213,6 @@ def reasoning_effect(scores: pd.DataFrame, references: pd.DataFrame) -> None:
     level = grade.shared_level(scores)
     chosen = scores[scores["level"] == level]
     table = chosen.pivot(index="model", columns="condition", values="balanced_accuracy")
-    sketch = sketch_score(references, level)
     fig, axes = plt.subplots(1, 2, figsize=(11, 6.2), sharex=True)
     for ax, provider in zip(axes, ("anthropic", "openai")):
         models = sorted((m for m in MODELS if m.provider == provider and m.id in table.index), key=lambda m: m.released)
@@ -271,8 +224,6 @@ def reasoning_effect(scores: pd.DataFrame, references: pd.DataFrame) -> None:
             ax.scatter(reasoned, y, s=62, color=PROVIDER_COLOR[provider], edgecolor=SURFACE, linewidth=1.2, zorder=3)
         ax.set_yticks(range(len(models)), [named(m) for m in models], fontsize=10.5, color=INK)
         ax.set_ylim(len(models) - 0.4, -0.9)
-        ax.axvline(sketch, color=SECONDARY, lw=1)
-        ax.text(sketch - 0.006, -0.72, f"Four-fact sketch {sketch:.2f}", ha="right", va="center", fontsize=9, color=SECONDARY)
         ax.set_title(PROVIDER_NAME[provider], loc="left", fontsize=12, fontweight="bold", pad=8)
         ax.set_xlim(0.5, 1.01)
         ax.set_xlabel("Balanced accuracy")
@@ -333,9 +284,6 @@ def generations(scores: pd.DataFrame, references: pd.DataFrame) -> None:
                 else:
                     alone.append((FAMILY_NAME[family], dates.iloc[-1], group[metric].iloc[-1]))
             if metric == "balanced_accuracy":
-                sketch = sketch_score(references, level)
-                ax.axhline(sketch, color=SECONDARY, lw=1)
-                ax.text(pd.Timestamp("2024-07-01"), sketch + 0.008, f"Four-fact sketch {sketch:.2f}", fontsize=9, color=SECONDARY)
                 ax.set_title(CONDITION_TITLE[condition], loc="left", fontsize=12, fontweight="bold", pad=8)
             if limits:
                 ax.set_ylim(*limits)
